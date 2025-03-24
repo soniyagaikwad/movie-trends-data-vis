@@ -10,25 +10,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="montage-design.css">
 </head>
+
 <body>
-    <header>
-        <h1>Montage: Exploring Movie Trends Over Time</h1>
-        <p>montage (n): a cinematic technique to combine short pieces of information to create a cohesive sequence, to convey a larger narrative.</p>
-    </header>
-
     <div class="container">
-        <div class="sidebar">
-            <h2>Montage</h2>
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Montage: Exploring Movie Trends Over Time</h1>
+            <p>montage (n): a cinematic technique to combine short pieces of information to create a cohesive sequence, to convey a larger narrative.</p>
         </div>
-
-        <div class="search-filter">
-            <input type="text" placeholder="🔍 Search">
-            <button class="filter-btn">▼ Filter</button>
-            <button class="clear-btn">✖</button>
+        
+        <!-- Movie Title Box -->
+        <div class="movie-title-box">
+            <h1 class="big-title">Montage</h1>
         </div>
-
-        <div class="movie-table">
-            <table>
+        
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" placeholder="Search">
+                </div>
+                <button class="filter-button">
+                    <span class="triangle">▼</span>
+                    Filter
+                </button>
+                <button class="cancel-button">✕</button>
+            </div>
+            
+            <table class="movie-table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -41,34 +51,109 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Movie Data Goes Here -->
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-
-        <div class="summary-section">
-            <h3>Movie Summary</h3>
-            <p>Movie summary from the dataset added here in more detail. Rating info and budget vs. revenue graph below.</p>
-            <div class="summary-graphs">
-                <div class="pie-chart">81%</div>
+        
+        <!-- Movie Summary Section -->
+        <div class="movie-summary">
+            <h2>Movie Summary</h2>
+            <p>movie summary from the dataset added here in more detail. rating info and budget vs. revenue graph below.</p>
+            
+            <div class="charts-container">
+                <div class="pie-chart">
+                    <div class="donut-chart">
+                        <div class="donut-hole"></div>
+                    </div>
+                    <div class="percentage">81%</div>
+                </div>
+                
                 <div class="bar-chart">
-                    <p>Budget ($ Millions) vs. Revenue ($ Millions)</p>
-                    <div class="bar"></div>
+                    <div style="font-size: 12px; margin-bottom: 5px;">
+                        <span style="color: #f27341;">■ Budget ($ Millions)</span>
+                        <span style="color: #2d5ba0; margin-left: 10px;">■ Revenue ($ Millions)</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #666;">
+                        <span>100</span>
+                        <span>80</span>
+                        <span>60</span>
+                        <span>40</span>
+                        <span>20</span>
+                        <span>0</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar">
+                            <div class="bar-budget"></div>
+                            <div class="bar-revenue"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #666; margin-top: 5px;">Movie</div>
+                    </div>
                 </div>
             </div>
         </div>
-
+        
+        <!-- Compare Section -->
         <div class="compare-section">
-            <h3>Compare All Movies</h3>
-            <div class="scatter-plot">
-                <!-- Scatter Plot Will Be Here -->
+            <div>
+                <h2>Compare All Movies</h2>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-color comedy"></div> Comedy</div>
+                    <div class="legend-item"><div class="legend-color romance"></div> Romance</div>
+                    <div class="legend-item"><div class="legend-color thriller"></div> Thriller</div>
+                    <div class="legend-item"><div class="legend-color action"></div> Action</div>
+                    <div class="legend-item"><div class="legend-color drama"></div> Drama</div>
+                    <div class="legend-item"><div class="legend-color adventure"></div> Adventure</div>
+                </div>
+                
+                <div class="scatter-plot">
+                    <!-- Sample dots for scatter plot -->
+                    <div class="dot comedy" style="left: 70px; bottom: 70px;"></div>
+                    <div class="dot romance" style="left: 150px; bottom: 90px;"></div>
+                    <div class="dot thriller" style="left: 200px; bottom: 80px;"></div>
+                    <div class="dot action" style="left: 250px; bottom: 170px;"></div>
+                    <div class="dot drama" style="left: 300px; bottom: 90px;"></div>
+                    
+                    <!-- Axes labels -->
+                    <div style="position: absolute; left: 0; bottom: 0; color: #2d5ba0; font-size: 12px;">0</div>
+                    <div style="position: absolute; left: 20%; bottom: 0; color: #2d5ba0; font-size: 12px;">2</div>
+                    <div style="position: absolute; left: 40%; bottom: 0; color: #2d5ba0; font-size: 12px;">4</div>
+                    <div style="position: absolute; left: 60%; bottom: 0; color: #2d5ba0; font-size: 12px;">6</div>
+                    <div style="position: absolute; left: 80%; bottom: 0; color: #2d5ba0; font-size: 12px;">8</div>
+                    <div style="position: absolute; left: 100%; bottom: 0; color: #2d5ba0; font-size: 12px;">10</div>
+                    
+                    <div style="position: absolute; left: 0; bottom: 0; color: #2d5ba0; font-size: 12px;">0</div>
+                    <div style="position: absolute; left: 0; bottom: 20%; color: #2d5ba0; font-size: 12px;">50</div>
+                    <div style="position: absolute; left: 0; bottom: 40%; color: #2d5ba0; font-size: 12px;">100</div>
+                    <div style="position: absolute; left: 0; bottom: 60%; color: #2d5ba0; font-size: 12px;">150</div>
+                    <div style="position: absolute; left: 0; bottom: 80%; color: #2d5ba0; font-size: 12px;">200</div>
+                </div>
             </div>
-            <div class="note">
-                <p><strong>NOTE:</strong> Play around with this graph by setting the x-axis and y-axis!</p>
-            </div>
-            <div class="axis-controls">
-                <button>▼ x-axis</button>
-                <button>▼ y-axis</button>
+            
+            <div>
+                <div class="note-box">
+                    <p>NOTE!</p>
+                    <p>Play around with this graph by editing the x-axis and y-axis!</p>
+                </div>
+                
+                <div class="axis-selector">
+                    <button class="axis-button">
+                        <span class="triangle">▼</span>
+                        x-axis
+                    </button>
+                    <button class="axis-button">
+                        <span class="triangle">▼</span>
+                        y-axis
+                    </button>
+                </div>
             </div>
         </div>
     </div>

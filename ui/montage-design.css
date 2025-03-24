@@ -1,118 +1,305 @@
-body {
-    font-family: "Courier Prime", monospace;
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f1eb;
-    color: #294a96;
+    box-sizing: border-box;
+    font-family: 'Courier Prime', monospace;
 }
 
-header {
-    text-align: left;
+body {
+    background-color: #f9f3f0;
     padding: 20px;
 }
 
-h1 {
-    font-size: 24px;
-    color: #294a96;
-}
-
+/* Layout */
 .container {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.sidebar {
-    background-color: #e86a33;
+.header {
+    grid-column: 1 / 2;
+}
+
+.movie-title-box {
+    grid-column: 2 / 3;
+    background-color: #f27341;
     color: white;
-    padding: 20px;
-    text-align: center;
-    font-size: 24px;
-}
-
-.search-filter {
     display: flex;
-    gap: 10px;
-}
-
-.search-filter input {
-    flex: 1;
-    padding: 8px;
-    font-size: 16px;
-}
-
-.filter-btn, .clear-btn {
-    background-color: #e86a33;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-.movie-table {
-    background-color: #e86a33;
-    padding: 10px;
-    color: white;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid white;
-}
-
-.summary-section {
-    background-color: white;
-    padding: 15px;
-}
-
-.summary-graphs {
-    display: flex;
-    gap: 20px;
-}
-
-.pie-chart {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: conic-gradient(blue 81%, lightgray 19%);
-    display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
+    justify-content: center;
+    padding: 20px;
+    min-height: 200px;
 }
 
-.bar-chart {
-    width: 200px;
-    height: 100px;
-    background: white;
-    border: 1px solid #ddd;
+.search-section {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    background-color: #f27341;
+    padding: 20px;
+}
+
+.movie-summary {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    background-color: white;
+    padding: 20px;
 }
 
 .compare-section {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 70% 30%;
     background-color: white;
-    padding: 15px;
+    padding: 20px;
 }
 
-.note {
-    background-color: #e86a33;
-    color: white;
+/* Header Styles */
+.header h1 {
+    color: #2d5ba0;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #2d5ba0;
+    line-height: 1.6;
+}
+
+/* Search Box Styles */
+.search-container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    flex: 1;
     padding: 10px;
+    border: none;
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
+.search-box input {
+    border: none;
+    flex: 1;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.search-icon {
+    margin-right: 10px;
+}
+
+.filter-button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #2d5ba0;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+}
+
+.filter-button .triangle {
+    margin-right: 5px;
+}
+
+.cancel-button {
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #2d5ba0;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Table Styles */
+.movie-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    text-align: center;
+    color: white;
+}
+
+.movie-table th {
+    padding: 10px;
+    font-weight: normal;
     font-size: 14px;
 }
 
-.axis-controls button {
-    background-color: #e86a33;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
+.movie-table td {
+    height: 300px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/* Movie Summary Styles */
+.movie-summary h2 {
+    color: #2d5ba0;
+    margin-bottom: 15px;
+}
+
+.movie-summary p {
+    color: #2d5ba0;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.charts-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.pie-chart {
+    width: 40%;
+    position: relative;
+    text-align: center;
+}
+
+.pie-chart svg {
+    width: 100%;
+}
+
+.pie-chart .percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d5ba0;
+}
+
+.bar-chart {
+    width: 55%;
+}
+
+/* Compare Section Styles */
+.compare-section h2 {
+    color: #2d5ba0;
+    margin-bottom: 15px;
+}
+
+.scatter-plot {
+    background-color: #f9f9f9;
+    height: 300px;
+    position: relative;
+    margin-right: 20px;
+}
+
+.legend {
+    display: flex;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #2d5ba0;
+}
+
+.legend-item {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+
+.note-box {
+    border: 1px solid #f27341;
+    padding: 15px;
+    color: #2d5ba0;
+    font-size: 14px;
+}
+
+.axis-selector {
+    margin-top: 20px;
+}
+
+.axis-button {
+    background-color: #f27341;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    border: none;
+    text-align: right;
+    position: relative;
+}
+
+.axis-button .triangle {
+    position: absolute;
+    left: 10px;
+}
+
+/* Title Box */
+.big-title {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+/* For the charts */
+.donut-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(#2d5ba0 81%, #f27341 19%);
+    position: relative;
+}
+
+.donut-hole {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    top: 25px;
+    left: 25px;
+}
+
+.bar-container {
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.bar {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.bar-budget {
+    background-color: #f27341;
+    height: 15%;
+}
+
+.bar-revenue {
+    background-color: #2d5ba0;
+    height: 85%;
+}
+
+.scatter-plot .dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* Legend colors */
+.comedy { background-color: #ff6b6b; }
+.romance { background-color: #2d5ba0; }
+.thriller { background-color: #f27341; }
+.action { background-color: #333; }
+.drama { background-color: #8a2be2; }
+.adventure { background-color: #3cb371; }
