@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montage: Exploring Movie Trends</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="montage-design.css">
+</head>
+<body>
+    <header>
+        <h1>Montage: Exploring Movie Trends Over Time</h1>
+        <p>montage (n): a cinematic technique to combine short pieces of information to create a cohesive sequence, to convey a larger narrative.</p>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Montage</h2>
+        </div>
+
+        <div class="search-filter">
+            <input type="text" placeholder="🔍 Search">
+            <button class="filter-btn">▼ Filter</button>
+            <button class="clear-btn">✖</button>
+        </div>
+
+        <div class="movie-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>MPAA Rating</th>
+                        <th>Genre</th>
+                        <th>Release Year</th>
+                        <th>Budget</th>
+                        <th>Gross Revenue</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Movie Data Goes Here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="summary-section">
+            <h3>Movie Summary</h3>
+            <p>Movie summary from the dataset added here in more detail. Rating info and budget vs. revenue graph below.</p>
+            <div class="summary-graphs">
+                <div class="pie-chart">81%</div>
+                <div class="bar-chart">
+                    <p>Budget ($ Millions) vs. Revenue ($ Millions)</p>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="compare-section">
+            <h3>Compare All Movies</h3>
+            <div class="scatter-plot">
+                <!-- Scatter Plot Will Be Here -->
+            </div>
+            <div class="note">
+                <p><strong>NOTE:</strong> Play around with this graph by setting the x-axis and y-axis!</p>
+            </div>
+            <div class="axis-controls">
+                <button>▼ x-axis</button>
+                <button>▼ y-axis</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
