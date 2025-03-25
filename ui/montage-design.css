@@ -23,7 +23,7 @@ body {
     grid-column: 1 / 2;
 }
 
-.movie-title-box {
+.montage-box {
     grid-column: 2 / 3;
     background-color: #f27341;
     color: white;
@@ -31,7 +31,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    min-height: 200px;
+    /* min-height: 200px; */
 }
 
 .search-section {
@@ -52,19 +52,20 @@ body {
     grid-column: span 2;
     display: grid;
     grid-template-columns: 70% 30%;
-    background-color: white;
+    background-color: #f9f3f0;
     padding: 20px;
 }
 
 /* Header Styles */
 .header h1 {
-    color: #2d5ba0;
+    color: #294a96;
     font-size: 32px;
     margin-bottom: 10px;
+    font-weight: normal;
 }
 
 .header p {
-    color: #2d5ba0;
+    color: #294a96;
     line-height: 1.6;
 }
 
@@ -97,10 +98,10 @@ body {
 .filter-button {
     padding: 10px 20px;
     margin-left: 10px;
-    background-color: #2d5ba0;
+    background-color: #294a96;
     color: white;
     border: none;
-    display: flex;
+    /* display: flex; */
     align-items: center;
 }
 
@@ -111,12 +112,12 @@ body {
 .cancel-button {
     padding: 10px;
     margin-left: 10px;
-    background-color: #2d5ba0;
+    background-color: #294a96;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    /* border-radius: 50%; */
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,12 +145,13 @@ body {
 
 /* Movie Summary Styles */
 .movie-summary h2 {
-    color: #2d5ba0;
+    color: #294a96;
     margin-bottom: 15px;
+    font-weight: normal;
 }
 
 .movie-summary p {
-    color: #2d5ba0;
+    color: #294a96;
     margin-bottom: 20px;
     line-height: 1.5;
 }
@@ -172,12 +174,12 @@ body {
 
 .pie-chart .percentage {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 46%;
+    left: 30%;
+    transform: translate(-25%, -25%);
     font-size: 24px;
-    font-weight: bold;
-    color: #2d5ba0;
+    /* font-weight: bold; */
+    color: #294a96;
 }
 
 .bar-chart {
@@ -186,22 +188,24 @@ body {
 
 /* Compare Section Styles */
 .compare-section h2 {
-    color: #2d5ba0;
+    color: #294a96;
     margin-bottom: 15px;
+    font-weight: normal;
 }
 
 .scatter-plot {
-    background-color: #f9f9f9;
+    background-color: #f9f3f0;
     height: 300px;
     position: relative;
-    margin-right: 20px;
+    margin-top: 20px;
+    margin-right: 50px;
 }
 
 .legend {
     display: flex;
     margin-top: 10px;
     font-size: 12px;
-    color: #2d5ba0;
+    color: #294a96;
 }
 
 .legend-item {
@@ -219,7 +223,7 @@ body {
 .note-box {
     border: 1px solid #f27341;
     padding: 15px;
-    color: #2d5ba0;
+    color: #294a96;
     font-size: 14px;
 }
 
@@ -246,7 +250,8 @@ body {
 /* Title Box */
 .big-title {
     font-size: 48px;
-    font-weight: bold;
+    /* font-weight: bold; */
+    font-weight: normal;
 }
 
 /* For the charts */
@@ -254,7 +259,7 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background: conic-gradient(#2d5ba0 81%, #f27341 19%);
+    background: conic-gradient(#294a96 81%, #f27341 19%);
     position: relative;
 }
 
@@ -285,7 +290,7 @@ body {
 }
 
 .bar-revenue {
-    background-color: #2d5ba0;
+    background-color: #294a96;
     height: 85%;
 }
 
@@ -297,9 +302,9 @@ body {
 }
 
 /* Legend colors */
-.comedy { background-color: #ff6b6b; }
-.romance { background-color: #2d5ba0; }
-.thriller { background-color: #f27341; }
-.action { background-color: #333; }
-.drama { background-color: #8a2be2; }
-.adventure { background-color: #3cb371; }
+.comedy { background-color: #ffb703; }
+.romance { background-color: #c1121f; }
+.thriller { background-color: #432818; }
+.action { background-color: #8b8c89; }
+.drama { background-color: #7b2cbf; }
+.adventure { background-color: #6a994e; }
