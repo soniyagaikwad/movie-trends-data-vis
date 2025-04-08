@@ -159,7 +159,8 @@ body {
 .charts-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 50px;
+    margin-left: 25px;
 }
 
 .pie-chart {
@@ -176,7 +177,7 @@ body {
     position: absolute;
     top: 46%;
     left: 30%;
-    transform: translate(-25%, -25%);
+    transform: translate(-30%, -140%);
     font-size: 24px;
     /* font-weight: bold; */
     color: #294a96;
@@ -273,25 +274,44 @@ body {
     left: 25px;
 }
 
-.bar-container {
+.y-axis-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #294a96;
     height: 150px;
+    margin-right: 10px;
+}
+
+.bar-container {
     display: flex;
     align-items: flex-end;
+    justify-content: space-around;
+    margin-top: 10px;
 }
 
 .bar {
-    width: 30px;
-    margin-right: 10px;
+    /* width: 30px;
+    margin-right: 10px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
 }
 
 .bar-budget {
     background-color: #f27341;
     height: 15%;
+    width: 30%;
+    margin-bottom: 5px;
 }
 
 .bar-revenue {
     background-color: #294a96;
     height: 85%;
+    width: 30%;
+    margin-bottom: 5px;
 }
 
 .scatter-plot .dot {
