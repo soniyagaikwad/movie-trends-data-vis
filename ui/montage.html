@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="montage-design.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
@@ -29,7 +31,7 @@
             <div class="search-container">
                 <div class="search-box">
                     <div class="search-icon">🔍</div>
-                    <input type="text" placeholder="Search">
+                    <input type="text" placeholder="Search" onchange="getMoviesByRatingAndYear('r', 1969);">
                 </div>
                 <button class="filter-button">
                     <span class="triangle">▼</span>
