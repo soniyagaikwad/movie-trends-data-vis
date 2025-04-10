@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- got help from LLMs to fix bugs -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="montage-design.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
@@ -29,7 +33,7 @@
             <div class="search-container">
                 <div class="search-box">
                     <div class="search-icon">🔍</div>
-                    <input type="text" placeholder="Search">
+                    <input type="text" placeholder="Search" onchange="getMoviesByRatingAndYear('r', 2000);">
                 </div>
                 <button class="filter-button">
                     <span class="triangle">▼</span>
@@ -47,11 +51,13 @@
                         <th>Release Year</th>
                         <th>Budget</th>
                         <th>Gross Revenue</th>
+                        <th>Profit</th>
                         <th>Rating</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
