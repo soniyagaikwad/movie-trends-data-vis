@@ -17,7 +17,7 @@ function setUp() {
         runtime: parseInt(d.Runtime),
         rating: parseFloat(d.Rating),
         year: parseInt(d3.timeFormat("%Y")(d3.timeParse("%Y-%m-%d")(d['Release Date']))),
-        profit: gross_revenue - budget
+        profit: parseInt(d.Gross) - parseInt(d.Budget),
       }));
     }).catch(e => {
       console.log(e);
