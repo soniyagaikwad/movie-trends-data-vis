@@ -16,7 +16,8 @@ function setUp() {
         genre: d.Genre,
         runtime: parseInt(d.Runtime),
         rating: parseFloat(d.Rating),
-        year: parseInt(d3.timeFormat("%Y")(d3.timeParse("%Y-%m-%d")(d['Release Date'])))
+        year: parseInt(d3.timeFormat("%Y")(d3.timeParse("%Y-%m-%d")(d['Release Date']))),
+        profit: gross_revenue - budget
       }));
     }).catch(e => {
       console.log(e);
