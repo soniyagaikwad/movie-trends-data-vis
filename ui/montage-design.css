@@ -125,7 +125,7 @@ body {
 
 /* Table Styles */
 .table-container {
-    max-height: 300px;
+    max-height: 375px;
     overflow-y: auto;
     margin-top: 20px;
 }

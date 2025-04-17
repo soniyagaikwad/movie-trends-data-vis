@@ -76,6 +76,66 @@ function formatMoney(value) {
 }
 
 /*
+search and filter movies according to the search query
+*/
+function searchMovies() {
+  const searchInput = document.querySelector('.search-box input');
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  
+  if (!data) {
+      console.error("Data not loaded yet.");
+      return;
+  }
+  
+  let filteredData;
+  
+  if (searchTerm === '') {
+      filteredData = data;
+  } else {
+      filteredData = data.filter(movieInfo => {
+          return (
+              movieInfo.movie.toLowerCase().includes(searchTerm) ||
+              movieInfo.mpaa_rating.toLowerCase().includes(searchTerm) ||
+              movieInfo.genre.toLowerCase().includes(searchTerm) ||
+              movieInfo.year.toString().includes(searchTerm) ||
+              movieInfo.budget.toString().includes(searchTerm) ||
+              movieInfo.gross_revenue.toString().includes(searchTerm) ||
+              movieInfo.profit.toString().includes(searchTerm) ||
+              movieInfo.rating.toString().includes(searchTerm)
+          );
+      });
+  }
+  
+  populateTable(filteredData);
+}
+
+/*
+display movie details in the movie summary section based on the selected movie
+*/
+function displayMovieDetails(movie) {
+  const movieSummaryTitle = document.querySelector('.movie-summary h2');
+  movieSummaryTitle.textContent = movie.movie;
+  
+  const movieSummaryText = document.querySelector('.movie-summary p');
+  movieSummaryText.textContent = movie.summary;
+  
+  const percentage = Math.round(movie.rating * 10);
+  const donutChart = document.querySelector('.donut-chart');
+  donutChart.style.background = `conic-gradient(#294a96 ${percentage}%, #f27341 ${percentage}%)`;
+  
+  const percentageDisplay = document.querySelector('.percentage');
+  percentageDisplay.textContent = `${percentage}%`;
+  
+  // TODO: fix implementation
+  const maxValue = Math.max(movie.budget, movie.gross_revenue);
+  const budgetHeight = movie.budget > 0 ? (movie.budget / maxValue) * 100 : 5;
+  const revenueHeight = movie.gross_revenue > 0 ? (movie.gross_revenue / maxValue) * 100 : 5;
+  
+  document.querySelector('.bar-budget').style.height = `${budgetHeight}%`;
+  document.querySelector('.bar .bar-revenue').style.height = `${revenueHeight}%`;
+}
+
+/*
   this will return a map, in which key is mpaa rating, and value is a set of gross_revenues in sorted order,
   this will be helpful to create boxplots
 */
