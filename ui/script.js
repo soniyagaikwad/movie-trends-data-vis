@@ -74,7 +74,8 @@ function getMoviesByRatingAndYear(rating, year) {
       gross_revenue: d.gross_revenue
   }));
 
-  // console.log(movies);
+  // check console to see if the movies are filtered correctly, if you're playing around
+  console.log(movies);
 
   return movies;
 }
