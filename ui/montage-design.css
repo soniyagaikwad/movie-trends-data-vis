@@ -16,6 +16,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: 2fr 1fr; */
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -123,23 +124,62 @@ body {
 }
 
 /* Table Styles */
+.table-container {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
 .movie-table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
     text-align: center;
     color: white;
+    table-layout: fixed;
 }
+
+/* Title */
+.movie-table th:nth-child(1), .movie-table td:nth-child(1) { width: 12.5%; }
+/* MPAA Rating */
+.movie-table th:nth-child(2), .movie-table td:nth-child(2) { width: 12.5%; }
+/* Genre */
+.movie-table th:nth-child(3), .movie-table td:nth-child(3) { width: 12.5%; }
+/* Release Year */
+.movie-table th:nth-child(4), .movie-table td:nth-child(4) { width: 12.5%; }
+/* Budget */
+.movie-table th:nth-child(5), .movie-table td:nth-child(5) { width: 12.5%; }
+/* Gross Revenue */
+.movie-table th:nth-child(6), .movie-table td:nth-child(6) { width: 12.5%; }
+/* Profit */
+.movie-table th:nth-child(7), .movie-table td:nth-child(7) { width: 12.5%; }
+/* Rating */
+.movie-table th:nth-child(8), .movie-table td:nth-child(8) { width: 12.5%; } 
 
 .movie-table th {
     padding: 10px;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    position: sticky;
+    top: 0;
+    background-color: #f27341;
+    z-index: 1;
 }
 
 .movie-table td {
-    height: 300px;
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 5px 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 12px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    /* text-overflow: ellipsis; */
+}
+
+.movie-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
 }
 
 /* Movie Summary Styles */

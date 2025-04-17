@@ -1,28 +1,78 @@
 let data;
-setUp();
+
+document.addEventListener('DOMContentLoaded', function() {
+  setUp();
+});
 
 /*
-  data cleaning and making a generic data structure that can be used to render any graph.
+  data cleaning and loading
 */
 function setUp() {
-    d3.csv('../data/movies.csv')
-    .then(dataOutput => {
-      dataOutput = dataOutput.slice(0, 509); 
-    data = dataOutput.map((d) => ({
-        movie: d.Title,
-        mpaa_rating: d['MPAA Rating'],
-        budget: parseInt(d.Budget),
-        gross_revenue: parseInt(d.Gross),
-        genre: d.Genre,
-        runtime: parseInt(d.Runtime),
-        rating: parseFloat(d.Rating),
-        year: parseInt(d3.timeFormat("%Y")(d3.timeParse("%Y-%m-%d")(d['Release Date']))),
-        profit: parseInt(d.Gross) - parseInt(d.Budget),
-      }));
-    }).catch(e => {
-      console.log(e);
-      alert('Error!');
-    });
+  d3.csv('../data/movies.csv')
+      .then(dataOutput => {
+          dataOutput = dataOutput.slice(0, 509); 
+          console.log('CSV data loaded successfully');
+          processData(dataOutput);
+      })
+      .catch(e => {
+          console.error('Error loading CSV:', e);
+          alert('Error loading movie data!');
+      });
+}
+
+/*
+process data structure
+*/
+function processData(rawData) {
+  data = rawData.map((d) => ({
+      movie: d.Title,
+      mpaa_rating: d['MPAA Rating'],
+      budget: parseInt(d.Budget) || 0,
+      gross_revenue: parseInt(d.Gross) || 0,
+      genre: d.Genre,
+      runtime: parseInt(d.Runtime) || 0,
+      rating: parseFloat(d.Rating) || 0,
+      year: d['Release Date'] ? parseInt(d['Release Date'].split('-')[0]) : 0,
+      profit: (parseInt(d.Gross) || 0) - (parseInt(d.Budget) || 0),
+      summary: d.Summary || "No summary available."
+  }));
+  
+  populateTable(data);
+}
+
+/*
+populate the table with movie info
+*/
+function populateTable(movies) {
+  const tableBody = document.getElementById('movieTableBody');
+  tableBody.innerHTML = '';
+  
+  movies.forEach(movie => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td>${movie.movie}</td>
+          <td>${movie.mpaa_rating}</td>
+          <td>${movie.genre}</td>
+          <td>${movie.year}</td>
+          <td>$${formatMoney(movie.budget)}</td>
+          <td>$${formatMoney(movie.gross_revenue)}</td>
+          <td>$${formatMoney(movie.profit)}</td>
+          <td>${movie.rating.toFixed(1)}</td>
+      `;
+      
+      row.addEventListener('click', () => displayMovieDetails(movie));
+      
+      tableBody.appendChild(row);
+  });
+}
+
+function formatMoney(value) {
+  if (value >= 1000000) {
+      return (value / 1000000).toFixed(1) + 'M';
+  } else if (value >= 1000) {
+      return (value / 1000).toFixed(1) + 'K';
+  }
+  return value.toString();
 }
 
 /*
@@ -74,7 +124,8 @@ function getMoviesByRatingAndYear(rating, year) {
       gross_revenue: d.gross_revenue
   }));
 
-  // console.log(movies);
+  // check console to see if the movies are filtered correctly, if you're playing around
+  console.log(movies);
 
   return movies;
 }
