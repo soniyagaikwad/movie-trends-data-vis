@@ -1,7 +1,24 @@
 let data;
 
+let activeFilters = {
+  genre: [],
+  year: [],
+  mpaa_rating: [],
+  rating: []
+};
+
+let filterDropdownVisible = false;
+
 document.addEventListener('DOMContentLoaded', function() {
   setUp();
+
+  const filterButton = document.querySelector('.filter-button');
+  const cancelButton = document.querySelector('.cancel-button');
+  
+  filterButton.addEventListener('click', displayFilterDropdown);
+  cancelButton.addEventListener('click', clearFilters);
+  
+  createFilterDropdown();
 });
 
 /*
@@ -78,36 +95,36 @@ function formatMoney(value) {
 /*
 search and filter movies according to the search query
 */
-function searchMovies() {
-  const searchInput = document.querySelector('.search-box input');
-  const searchTerm = searchInput.value.toLowerCase().trim();
+// function searchMovies() {
+//   const searchInput = document.querySelector('.search-box input');
+//   const searchTerm = searchInput.value.toLowerCase().trim();
   
-  if (!data) {
-      console.error("Data not loaded yet.");
-      return;
-  }
+//   if (!data) {
+//       console.error("Data not loaded yet.");
+//       return;
+//   }
   
-  let filteredData;
+//   let filteredData;
   
-  if (searchTerm === '') {
-      filteredData = data;
-  } else {
-      filteredData = data.filter(movieInfo => {
-          return (
-              movieInfo.movie.toLowerCase().includes(searchTerm) ||
-              movieInfo.mpaa_rating.toLowerCase().includes(searchTerm) ||
-              movieInfo.genre.toLowerCase().includes(searchTerm) ||
-              movieInfo.year.toString().includes(searchTerm) ||
-              movieInfo.budget.toString().includes(searchTerm) ||
-              movieInfo.gross_revenue.toString().includes(searchTerm) ||
-              movieInfo.profit.toString().includes(searchTerm) ||
-              movieInfo.rating.toString().includes(searchTerm)
-          );
-      });
-  }
+//   if (searchTerm === '') {
+//       filteredData = data;
+//   } else {
+//       filteredData = data.filter(movieInfo => {
+//           return (
+//               movieInfo.movie.toLowerCase().includes(searchTerm) ||
+//               movieInfo.mpaa_rating.toLowerCase().includes(searchTerm) ||
+//               movieInfo.genre.toLowerCase().includes(searchTerm) ||
+//               movieInfo.year.toString().includes(searchTerm) ||
+//               movieInfo.budget.toString().includes(searchTerm) ||
+//               movieInfo.gross_revenue.toString().includes(searchTerm) ||
+//               movieInfo.profit.toString().includes(searchTerm) ||
+//               movieInfo.rating.toString().includes(searchTerm)
+//           );
+//       });
+//   }
   
-  populateTable(filteredData);
-}
+//   populateTable(filteredData);
+// }
 
 /*
 display movie details in the movie summary section based on the selected movie
@@ -133,6 +150,396 @@ function displayMovieDetails(movie) {
   
   document.querySelector('.bar-budget').style.height = `${budgetHeight}%`;
   document.querySelector('.bar .bar-revenue').style.height = `${revenueHeight}%`;
+}
+
+/*
+create filter dropdown element and style
+*/
+function createFilterDropdown() {
+  const filterDropdown = document.createElement('div');
+  filterDropdown.className = 'filter-dropdown';
+  filterDropdown.style.display = 'none';
+  
+  const style = document.createElement('style');
+  style.textContent = `
+      .filter-dropdown {
+          position: absolute;
+          top: 60px;
+          left: 0;
+          width: 550px;
+          background-color: white;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          z-index: 10;
+          padding: 10px;
+          color: #294a96;
+          max-height: 395px;
+          overflow-y: auto;
+      }
+      
+      .filter-section {
+          margin-bottom: 15px;
+      }
+      
+      .filter-section h3 {
+          margin-bottom: 8px;
+          font-weight: normal;
+          color: #294a96;
+      }
+      
+      .filter-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+      }
+      
+      .filter-option {
+          background-color: #f5f5f5;
+          border: 1px solid #ddd;
+          padding: 5px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          transition: background-color 0.2s;
+      }
+      
+      .filter-option.active {
+          background-color: #f27341;
+          color: white;
+          border-color: #f27341;
+      }
+      
+      .filter-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 15px;
+      }
+      
+      .apply-filter, .clear-filter {
+          padding: 8px 15px;
+          border: none;
+          cursor: pointer;
+      }
+      
+      .apply-filter {
+          background-color: #294a96;
+          color: white;
+      }
+      
+      .clear-filter {
+          background-color: #f5f5f5;
+          color: #294a96;
+          border: 1px solid #ddd;
+      }
+      
+      .range-filter {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+      }
+      
+      .range-filter input {
+          width: 100px;
+          padding: 5px;
+          border: 1px solid #ddd;
+      }
+  `;
+  document.head.appendChild(style);
+  
+  const searchContainer = document.querySelector('.search-container');
+  searchContainer.style.position = 'relative';
+  searchContainer.appendChild(filterDropdown);
+}
+
+/*
+display filter dropdown when the filter button is clicked
+*/
+function displayFilterDropdown() {
+  const filterDropdown = document.querySelector('.filter-dropdown');
+  
+  if (filterDropdownVisible) {
+      filterDropdown.style.display = 'none';
+      filterDropdownVisible = false;
+  } else {
+      updateFilterDropdownContent();
+      filterDropdown.style.display = 'block';
+      filterDropdownVisible = true;
+  }
+}
+
+/*
+update filter dropdown content with filter options
+*/
+function updateFilterDropdownContent() {
+  if (!data) return;
+  
+  const filterDropdown = document.querySelector('.filter-dropdown');
+  filterDropdown.innerHTML = '';
+  
+  const genres = [...new Set(data.map(movie => movie.genre))].sort();
+  const years = [...new Set(data.map(movie => movie.year))].sort((a, b) => b - a);
+  const mpaaRatings = [...new Set(data.map(movie => movie.mpaa_rating))].sort();
+  
+  filterDropdown.appendChild(createFilterSection('Genre', 'genre', genres));
+  filterDropdown.appendChild(createFilterSection('Year', 'year', years));
+  filterDropdown.appendChild(createFilterSection('MPAA Rating', 'mpaa_rating', mpaaRatings));
+  filterDropdown.appendChild(createRatingFilterSection());
+  
+  const buttonContainer = document.createElement('div');
+  buttonContainer.className = 'filter-buttons';
+  
+  const applyButton = document.createElement('button');
+  applyButton.className = 'apply-filter';
+  applyButton.textContent = 'Apply Filters';
+  applyButton.addEventListener('click', applyFilters);
+  
+  const clearButton = document.createElement('button');
+  clearButton.className = 'clear-filter';
+  clearButton.textContent = 'Clear All';
+  clearButton.addEventListener('click', clearFilters);
+  
+  buttonContainer.appendChild(clearButton);
+  buttonContainer.appendChild(applyButton);
+  filterDropdown.appendChild(buttonContainer);
+}
+
+/*
+create filter section
+*/
+function createFilterSection(title, filterType, options) {
+  const section = document.createElement('div');
+  section.className = 'filter-section';
+  
+  const heading = document.createElement('h3');
+  heading.textContent = title;
+  section.appendChild(heading);
+  
+  const optionsContainer = document.createElement('div');
+  optionsContainer.className = 'filter-options';
+  
+  options.forEach(option => {
+      if (!option) return;
+      
+      const optionElement = document.createElement('div');
+      optionElement.className = 'filter-option';
+      optionElement.textContent = option;
+      
+      if (activeFilters[filterType].includes(option)) {
+          optionElement.classList.add('active');
+      }
+      
+      optionElement.addEventListener('click', () => {
+          optionElement.classList.toggle('active');
+      });
+      
+      optionsContainer.appendChild(optionElement);
+  });
+  
+  section.appendChild(optionsContainer);
+  return section;
+}
+
+/*
+filter based on rating range
+*/
+function createRatingFilterSection() {
+  const section = document.createElement('div');
+  section.className = 'filter-section';
+  
+  const heading = document.createElement('h3');
+  heading.textContent = 'Rating';
+  section.appendChild(heading);
+  
+  const rangeContainer = document.createElement('div');
+  rangeContainer.className = 'range-filter';
+  
+  const minInput = document.createElement('input');
+  minInput.type = 'number';
+  minInput.min = '0';
+  minInput.max = '10';
+  minInput.step = '0.1';
+  minInput.placeholder = 'Min (0-10)';
+  minInput.value = activeFilters.rating[0] || '';
+  
+  const toText = document.createElement('span');
+  toText.textContent = 'to';
+  
+  const maxInput = document.createElement('input');
+  maxInput.type = 'number';
+  maxInput.min = '0';
+  maxInput.max = '10';
+  maxInput.step = '0.1';
+  maxInput.placeholder = 'Max (0-10)';
+  maxInput.value = activeFilters.rating[1] || '';
+  
+  rangeContainer.appendChild(minInput);
+  rangeContainer.appendChild(toText);
+  rangeContainer.appendChild(maxInput);
+  
+  section.appendChild(rangeContainer);
+  return section;
+}
+
+/*
+apply filters and update the table
+*/
+function applyFilters() {
+  collectActiveFilters();
+  filterAndDisplayMovies();
+  displayFilterDropdown();
+}
+
+/*
+collect active filters from the filter dropdown
+*/
+function collectActiveFilters() {
+  activeFilters = {
+      genre: [],
+      year: [],
+      mpaa_rating: [],
+      rating: []
+  };
+  
+  const genreSection = document.querySelector('.filter-section:nth-child(1)');
+  const activeGenres = genreSection.querySelectorAll('.filter-option.active');
+  activeFilters.genre = Array.from(activeGenres).map(element => element.textContent);
+  
+  const yearSection = document.querySelector('.filter-section:nth-child(2)');
+  const activeYears = yearSection.querySelectorAll('.filter-option.active');
+  activeFilters.year = Array.from(activeYears).map(element => parseInt(element.textContent));
+  
+  const mpaaSection = document.querySelector('.filter-section:nth-child(3)');
+  const activeMpaaRatings = mpaaSection.querySelectorAll('.filter-option.active');
+  activeFilters.mpaa_rating = Array.from(activeMpaaRatings).map(element => element.textContent);
+  
+  const ratingSection = document.querySelector('.filter-section:nth-child(4)');
+  const minRating = ratingSection.querySelector('input:first-child').value;
+  const maxRating = ratingSection.querySelector('input:last-child').value;
+  
+  if (minRating !== '' || maxRating !== '') {
+      activeFilters.rating = [
+          minRating !== '' ? parseFloat(minRating) : 0,
+          maxRating !== '' ? parseFloat(maxRating) : 10
+      ];
+  }
+}
+
+/*
+clear all filters and reset the table
+*/
+function clearFilters() {
+  activeFilters = {
+      genre: [],
+      year: [],
+      mpaa_rating: [],
+      rating: []
+  };
+  
+  const searchInput = document.querySelector('.search-box input');
+  searchInput.value = '';
+  
+  populateTable(data);
+  
+  if (filterDropdownVisible) {
+      displayFilterDropdown();
+  }
+}
+
+/*
+filter and display movies based on active filters
+*/
+function filterAndDisplayMovies() {
+  if (!data) return;
+  
+  const searchInput = document.querySelector('.search-box input');
+  const searchTerm = searchInput.value.toLowerCase().trim();
+  
+  let filteredData = searchTerm === '' ? [...data] : data.filter(movie => {
+      return (
+          movie.movie.toLowerCase().includes(searchTerm) ||
+          movie.mpaa_rating.toLowerCase().includes(searchTerm) ||
+          movie.genre.toLowerCase().includes(searchTerm) ||
+          movie.year.toString().includes(searchTerm) ||
+          movie.budget.toString().includes(searchTerm) ||
+          movie.gross_revenue.toString().includes(searchTerm) ||
+          movie.profit.toString().includes(searchTerm) ||
+          movie.rating.toString().includes(searchTerm)
+      );
+  });
+  
+  filteredData = filteredData.filter(movie => {
+      if (activeFilters.genre.length > 0 && !activeFilters.genre.includes(movie.genre)) {
+          return false;
+      }
+      
+      if (activeFilters.year.length > 0 && !activeFilters.year.includes(movie.year)) {
+          return false;
+      }
+      
+      if (activeFilters.mpaa_rating.length > 0 && !activeFilters.mpaa_rating.includes(movie.mpaa_rating)) {
+          return false;
+      }
+      
+      if (activeFilters.rating.length > 0) {
+          const [minRating, maxRating] = activeFilters.rating;
+          if (movie.rating < minRating || movie.rating > maxRating) {
+              return false;
+          }
+      }
+      
+      return true;
+  });
+  
+  populateTable(filteredData);
+}
+
+/*
+search and filter movies according to the search query
+*/
+function searchMovies() {
+  if (hasActiveFilters()) {
+      filterAndDisplayMovies();
+  } else {
+      const searchInput = document.querySelector('.search-box input');
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      
+      if (!data) {
+          console.error("Data not loaded yet.");
+          return;
+      }
+      
+      let filteredData;
+      
+      if (searchTerm === '') {
+          filteredData = data;
+      } else {
+          filteredData = data.filter(movieInfo => {
+              return (
+                  movieInfo.movie.toLowerCase().includes(searchTerm) ||
+                  movieInfo.mpaa_rating.toLowerCase().includes(searchTerm) ||
+                  movieInfo.genre.toLowerCase().includes(searchTerm) ||
+                  movieInfo.year.toString().includes(searchTerm) ||
+                  // movieInfo.budget.toString().includes(searchTerm) ||
+                  // movieInfo.gross_revenue.toString().includes(searchTerm) ||
+                  // movieInfo.profit.toString().includes(searchTerm) ||
+                  movieInfo.rating.toString().includes(searchTerm)
+              );
+          });
+      }
+      
+      populateTable(filteredData);
+  }
+}
+
+/*
+check if there are any active filters
+*/
+function hasActiveFilters() {
+  return (
+      activeFilters.genre.length > 0 ||
+      activeFilters.year.length > 0 ||
+      activeFilters.mpaa_rating.length > 0 ||
+      activeFilters.rating.length > 0
+  );
 }
 
 /*
