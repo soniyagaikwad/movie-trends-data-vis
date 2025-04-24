@@ -93,40 +93,6 @@ function formatMoney(value) {
 }
 
 /*
-search and filter movies according to the search query
-*/
-// function searchMovies() {
-//   const searchInput = document.querySelector('.search-box input');
-//   const searchTerm = searchInput.value.toLowerCase().trim();
-  
-//   if (!data) {
-//       console.error("Data not loaded yet.");
-//       return;
-//   }
-  
-//   let filteredData;
-  
-//   if (searchTerm === '') {
-//       filteredData = data;
-//   } else {
-//       filteredData = data.filter(movieInfo => {
-//           return (
-//               movieInfo.movie.toLowerCase().includes(searchTerm) ||
-//               movieInfo.mpaa_rating.toLowerCase().includes(searchTerm) ||
-//               movieInfo.genre.toLowerCase().includes(searchTerm) ||
-//               movieInfo.year.toString().includes(searchTerm) ||
-//               movieInfo.budget.toString().includes(searchTerm) ||
-//               movieInfo.gross_revenue.toString().includes(searchTerm) ||
-//               movieInfo.profit.toString().includes(searchTerm) ||
-//               movieInfo.rating.toString().includes(searchTerm)
-//           );
-//       });
-//   }
-  
-//   populateTable(filteredData);
-// }
-
-/*
 display movie details in the movie summary section based on the selected movie
 */
 function displayMovieDetails(movie) {
@@ -156,115 +122,30 @@ function displayMovieDetails(movie) {
 create filter dropdown element and style
 */
 function createFilterDropdown() {
-  const filterDropdown = document.createElement('div');
-  filterDropdown.className = 'filter-dropdown';
-  filterDropdown.style.display = 'none';
-  
-  const style = document.createElement('style');
-  style.textContent = `
-      .filter-dropdown {
-          position: absolute;
-          top: 60px;
-          left: 0;
-          width: 550px;
-          background-color: white;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-          z-index: 10;
-          padding: 10px;
-          color: #294a96;
-          max-height: 395px;
-          overflow-y: auto;
-      }
-      
-      .filter-section {
-          margin-bottom: 15px;
-      }
-      
-      .filter-section h3 {
-          margin-bottom: 8px;
-          font-weight: normal;
-          color: #294a96;
-      }
-      
-      .filter-options {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-      }
-      
-      .filter-option {
-          background-color: #f5f5f5;
-          border: 1px solid #ddd;
-          padding: 5px 10px;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 12px;
-          transition: background-color 0.2s;
-      }
-      
-      .filter-option.active {
-          background-color: #f27341;
-          color: white;
-          border-color: #f27341;
-      }
-      
-      .filter-buttons {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 15px;
-      }
-      
-      .apply-filter, .clear-filter {
-          padding: 8px 15px;
-          border: none;
-          cursor: pointer;
-      }
-      
-      .apply-filter {
-          background-color: #294a96;
-          color: white;
-      }
-      
-      .clear-filter {
-          background-color: #f5f5f5;
-          color: #294a96;
-          border: 1px solid #ddd;
-      }
-      
-      .range-filter {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-      }
-      
-      .range-filter input {
-          width: 100px;
-          padding: 5px;
-          border: 1px solid #ddd;
-      }
-  `;
-  document.head.appendChild(style);
-  
-  const searchContainer = document.querySelector('.search-container');
-  searchContainer.style.position = 'relative';
-  searchContainer.appendChild(filterDropdown);
-}
+    const filterDropdown = document.createElement('div');
+    filterDropdown.className = 'filter-dropdown';
+    
+    const searchContainer = document.querySelector('.search-container');
+    searchContainer.style.position = 'relative';
+    searchContainer.appendChild(filterDropdown);
+  }
+
 
 /*
 display filter dropdown when the filter button is clicked
 */
 function displayFilterDropdown() {
-  const filterDropdown = document.querySelector('.filter-dropdown');
-  
-  if (filterDropdownVisible) {
-      filterDropdown.style.display = 'none';
-      filterDropdownVisible = false;
-  } else {
-      updateFilterDropdownContent();
-      filterDropdown.style.display = 'block';
-      filterDropdownVisible = true;
+    const filterDropdown = document.querySelector('.filter-dropdown');
+    
+    if (filterDropdownVisible) {
+        filterDropdown.style.display = 'none';
+        filterDropdownVisible = false;
+    } else {
+        updateFilterDropdownContent();
+        filterDropdown.style.display = 'block';
+        filterDropdownVisible = true;
+    }
   }
-}
 
 /*
 update filter dropdown content with filter options
