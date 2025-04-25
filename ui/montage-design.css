@@ -369,6 +369,34 @@ body {
     left: 10px;
 }
 
+/* Axis Dropdown Styles */
+#x-axis-dropdown, #y-axis-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 300px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    z-index: 10;
+    padding: 10px;
+    color: #294a96;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.axis-label {
+    position: absolute;
+    color: #2d5ba0;
+    font-size: 12px;
+}
+
+.axis-title {
+    position: absolute;
+    color: #294a96;
+    font-size: 14px;
+}
+
 /* Title Box */
 .big-title {
     font-size: 48px;
