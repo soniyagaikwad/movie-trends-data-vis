@@ -103,7 +103,9 @@ function populateTable(movies) {
 }
 
 function formatMoney(value) {
-    if (value >= 1000000) {
+    if (value >= 1000000000) {
+        return (value / 1000000000).toFixed(1) + 'B';
+    } else if (value >= 1000000) {
         return (value / 1000000).toFixed(1) + 'M';
     } else if (value >= 1000) {
         return (value / 1000).toFixed(1) + 'K';
@@ -837,6 +839,7 @@ function createBoxPlot() {
 
     styleAxis(svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d => {
+            if (d >= 1000000000) return (d / 1000000000) + "B";
             if (d >= 1000000) return (d / 1000000) + "M";
             if (d >= 1000) return (d / 1000) + "K";
             return d;
