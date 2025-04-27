@@ -73,6 +73,7 @@ function processData(rawData) {
     }));
 
     populateTable(data);
+    createBoxPlot();
 }
 
 /*
@@ -745,5 +746,148 @@ function getMoviesByRatingAndYear(rating, year) {
     console.log(movies);
 
     return movies;
+}
+
+function createBoxPlot() {
+  if (!data) {
+    console.error("Data not loaded yet.");
+    return;
+  }
+
+  const groupedData = groupGrossByRating();
+
+  // Calculate summary statistics for each rating
+  const summary = Object.keys(groupedData).map(rating => {
+    const values = Array.from(groupedData[rating]);
+    values.sort(d3.ascending);
+    
+    const q1 = d3.quantile(values, 0.25);
+    const median = d3.quantile(values, 0.5);
+    const q3 = d3.quantile(values, 0.75);
+    const min = d3.min(values);
+    const max = d3.max(values);
+
+    return {
+      rating,
+      q1,
+      median,
+      q3,
+      min,
+      max
+    };
+  });
+
+  const margin = { top: 60, right: 30, bottom: 60, left: 160 },
+        width = 800 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+  const svg = d3.select("body")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // X scale
+  const x = d3.scaleBand()
+    .range([0, width])
+    .domain(summary.map(d => d.rating))
+    .paddingInner(1)
+    .paddingOuter(0.5);
+
+  svg.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("text-anchor", "end");
+
+  // Y scale
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(summary, d => d.max)])
+    .range([height, 0]);
+
+  svg.append("g")
+    .call(d3.axisLeft(y).tickFormat(d => {
+        if (d >= 1000000) return (d / 1000000) + "M";
+        if (d >= 1000) return (d / 1000) + "K";
+        return d;
+    }));
+
+  // Draw vertical lines (min to max)
+  svg.selectAll("vertLines")
+    .data(summary)
+    .enter()
+    .append("line")
+      .attr("x1", d => x(d.rating))
+      .attr("x2", d => x(d.rating))
+      .attr("y1", d => y(d.min))
+      .attr("y2", d => y(d.max))
+      .attr("stroke", "black")
+      .style("width", 40)
+      .on("mouseover", function(event, d) {
+        tooltip.style("opacity", 1)
+               .html(
+                 `<b>Min:</b> $${formatMoney(d.min)}<br>
+                  <b>Q1:</b> $${formatMoney(d.q1)}<br>
+                  <b>Median:</b> $${formatMoney(d.median)}<br>
+                  <b>Q3:</b> $${formatMoney(d.q3)}<br>
+                  <b>Max:</b> $${formatMoney(d.max)}`
+               );
+        d3.select(this).style("fill", "#ff7f0e");  // Highlight on hover
+        })
+      .on("mousemove", function(event) {
+        tooltip.style("left", (event.pageX + 10) + "px")
+               .style("top", (event.pageY - 20) + "px");
+      })
+      .on("mouseleave", function() {
+        tooltip.style("opacity", 0);
+        d3.select(this).style("fill", "#69b3a2");  // Restore color
+      });
+
+  const tooltip = d3.select("#tooltip");
+
+
+  // Draw boxes
+  svg.selectAll("boxes")
+    .data(summary)
+    .enter()
+    .append("rect")
+      .attr("x", d => x(d.rating) - 20)
+      .attr("y", d => y(d.q3))
+      .attr("height", d => y(d.q1) - y(d.q3))
+      .attr("width", 40)
+      .attr("stroke", "black")
+      .style("fill", "#69b3a2")
+      .on("mouseover", function(event, d) {
+        tooltip.style("opacity", 1)
+               .html(
+                 `<b>Min:</b> $${formatMoney(d.min)}<br>
+                  <b>Q1:</b> $${formatMoney(d.q1)}<br>
+                  <b>Median:</b> $${formatMoney(d.median)}<br>
+                  <b>Q3:</b> $${formatMoney(d.q3)}<br>
+                  <b>Max:</b> $${formatMoney(d.max)}`
+               );
+        d3.select(this).style("fill", "#ff7f0e");  // Highlight on hover
+        })
+      .on("mousemove", function(event) {
+        tooltip.style("left", (event.pageX + 10) + "px")
+               .style("top", (event.pageY - 20) + "px");
+      })
+      .on("mouseleave", function() {
+        tooltip.style("opacity", 0);
+        d3.select(this).style("fill", "#69b3a2");  // Restore color
+      });
+
+  // Draw median lines
+  svg.selectAll("medianLines")
+    .data(summary)
+    .enter()
+    .append("line")
+      .attr("x1", d => x(d.rating) - 20)
+      .attr("x2", d => x(d.rating) + 20)
+      .attr("y1", d => y(d.median))
+      .attr("y2", d => y(d.median))
+      .attr("stroke", "black")
+      .style("width", 80);
 }
 
