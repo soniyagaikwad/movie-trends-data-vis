@@ -536,7 +536,7 @@ function updateXAxisDropdownContent() {
     xAxisDropdown.appendChild(heading);
 
     const axisOptions = [
-        { value: 'mpaa_rating', label: 'MPAA Rating' },
+        // { value: 'mpaa_rating', label: 'MPAA Rating' },
         { value: 'rating', label: 'Rating' },
         { value: 'year', label: 'Release Year' },
         { value: 'budget', label: 'Budget' },
@@ -607,7 +607,7 @@ function updateYAxisDropdownContent() {
     yAxisDropdown.appendChild(heading);
 
     const axisOptions = [
-        { value: 'mpaa_rating', label: 'MPAA Rating' },
+        // { value: 'mpaa_rating', label: 'MPAA Rating' },
         { value: 'rating', label: 'Rating' },
         { value: 'year', label: 'Release Year' },
         { value: 'budget', label: 'Budget' },
@@ -666,7 +666,7 @@ function applyAxisChanges(axisType) {
     if (axisType === 'x') {
         currentXAxis = selectedXAxis;
         const axisOptions = [
-            { value: 'mpaa_rating', label: 'MPAA Rating' },
+            // { value: 'mpaa_rating', label: 'MPAA Rating' },
             { value: 'rating', label: 'Rating' },
             { value: 'year', label: 'Release Year' },
             { value: 'budget', label: 'Budget' },
@@ -679,7 +679,7 @@ function applyAxisChanges(axisType) {
     } else if (axisType === 'y') {
         currentYAxis = selectedYAxis;
         const axisOptions = [
-            { value: 'mpaa_rating', label: 'MPAA Rating' },
+            // { value: 'mpaa_rating', label: 'MPAA Rating' },
             { value: 'rating', label: 'Rating' },
             { value: 'year', label: 'Release Year' },
             { value: 'budget', label: 'Budget' },
