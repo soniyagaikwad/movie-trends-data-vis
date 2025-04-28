@@ -74,6 +74,7 @@ function processData(rawData) {
 
     populateTable(data);
     createBoxPlot();
+    updateScatterPlot(); 
 }
 
 /*
@@ -1025,3 +1026,193 @@ function createBoxPlot() {
         .attr("stroke", "#294a96")
         .style("stroke-width", "2px");
 }
+
+/*
+To update the scatter plot based on the current X and Y axis selections
+*/
+function updateScatterPlot() {
+    if (!data) {
+        console.error("Data not loaded yet.");
+        return;
+    }
+
+    // Clear existing dots
+    const scatterPlot = document.querySelector('.scatter-plot');
+    
+    // Remove all dots but keep the axis labels
+    const dots = scatterPlot.querySelectorAll('.dot');
+    dots.forEach(dot => dot.remove());
+
+    // Get the axis labels based on the selected axes
+    const axisOptions = [
+        { value: 'rating', label: 'Rating' },
+        { value: 'year', label: 'Release Year' },
+        { value: 'budget', label: 'Budget' },
+        { value: 'gross_revenue', label: 'Gross Revenue' },
+        { value: 'profit', label: 'Profit' }
+    ];
+
+    const xAxisLabel = axisOptions.find(option => option.value === currentXAxis).label;
+    const yAxisLabel = axisOptions.find(option => option.value === currentYAxis).label;
+
+    // Update X and Y axis titles
+    const xAxisTitle = document.createElement('div');
+    xAxisTitle.className = 'axis-title';
+    xAxisTitle.style.bottom = '-40px';
+    xAxisTitle.style.left = '50%';
+    xAxisTitle.style.transform = 'translateX(-50%)';
+    xAxisTitle.textContent = xAxisLabel;
+
+    const yAxisTitle = document.createElement('div');
+    yAxisTitle.className = 'axis-title';
+    yAxisTitle.style.top = '50%';
+    yAxisTitle.style.left = '-120px';
+    yAxisTitle.style.transform = 'rotate(-90deg) translateX(50%)';
+    yAxisTitle.textContent = yAxisLabel;
+
+    // Remove existing axis titles if they exist
+    const existingTitles = scatterPlot.querySelectorAll('.axis-title');
+    existingTitles.forEach(title => title.remove());
+
+    scatterPlot.appendChild(xAxisTitle);
+    scatterPlot.appendChild(yAxisTitle);
+
+    // Clear existing x and y axis labels
+    const existingLabels = scatterPlot.querySelectorAll('.axis-label');
+    existingLabels.forEach(label => label.remove());
+
+    // Determine data range for the selected axes
+    let xMin = Infinity, xMax = -Infinity;
+    let yMin = Infinity, yMax = -Infinity;
+
+    data.forEach(movie => {
+        if (movie[currentXAxis] < xMin) xMin = movie[currentXAxis];
+        if (movie[currentXAxis] > xMax) xMax = movie[currentXAxis];
+        if (movie[currentYAxis] < yMin) yMin = movie[currentYAxis];
+        if (movie[currentYAxis] > yMax) yMax = movie[currentYAxis];
+    });
+
+    // Add some padding to the ranges
+    xMin = Math.max(0, xMin - (xMax - xMin) * 0.05);
+    xMax = xMax + (xMax - xMin) * 0.05;
+    yMin = Math.max(0, yMin - (yMax - yMin) * 0.05);
+    yMax = yMax + (yMax - yMin) * 0.05;
+
+    // Create X-axis labels
+    const xSteps = 5;
+    for (let i = 0; i <= xSteps; i++) {
+        const value = xMin + (xMax - xMin) * (i / xSteps);
+        const label = document.createElement('div');
+        label.className = 'axis-label';
+        label.style.left = `${(i/ xSteps) * 99}%`;
+        label.style.bottom = '-15px';
+        
+        // Format based on axis type
+        if (currentXAxis === 'budget' || currentXAxis === 'gross_revenue' || currentXAxis === 'profit') {
+            label.textContent = formatMoney(value);
+        } else if (currentXAxis === 'year') {
+            label.textContent = Math.round(value);
+        } else {
+            label.textContent = value.toFixed(1);
+        }
+        
+        scatterPlot.appendChild(label);
+    }
+
+    // Create Y-axis labels
+    const ySteps = 5;
+    for (let i = 0; i <= ySteps; i++) {
+        const value = yMin + (yMax - yMin) * (i / ySteps);
+        const label = document.createElement('div');
+        label.className = 'axis-label';
+        label.style.bottom = `${(i / ySteps) * 97}%`;
+        label.style.left = '-50px';
+        
+        // Format based on axis type
+        if (currentYAxis === 'budget' || currentYAxis === 'gross_revenue' || currentYAxis === 'profit') {
+            label.textContent = formatMoney(value);
+        } else if (currentYAxis === 'year') {
+            label.textContent = Math.round(value);
+        } else {
+            label.textContent = value.toFixed(1);
+        }
+        scatterPlot.appendChild(label);
+    }
+
+    // Add dots for each movie (limit to a manageable number for performance)
+    const maxDots = 200;
+    const movieSample = data.length > maxDots ? 
+        data.sort(() => 0.5 - Math.random()).slice(0, maxDots) : 
+        data;
+
+    const genreColors = {
+        'comedy': 'comedy',
+        'romance': 'romance',
+        'thriller': 'thriller',
+        'action': 'action',
+        'drama': 'drama',
+        'adventure': 'adventure'
+    };
+
+    movieSample.forEach(movie => {
+        if (movie[currentXAxis] === undefined || movie[currentYAxis] === undefined) return;
+        
+        // Create a dot for the movie
+        const dot = document.createElement('div');
+        dot.className = `dot ${genreColors[movie.genre.toLowerCase()] || 'comedy'}`;
+        
+        // Position based on data values
+        const xPos = ((movie[currentXAxis] - xMin) / (xMax - xMin)) * 100;
+        const yPos = ((movie[currentYAxis] - yMin) / (yMax - yMin)) * 100;
+        
+        dot.style.left = `${xPos}%`;
+        dot.style.bottom = `${yPos}%`;
+        
+        // Add mouseover tooltip
+        dot.addEventListener('mouseover', function(event) {
+            tooltip.innerHTML = `
+                <strong>${movie.movie}</strong><br>
+                ${xAxisLabel}: ${formatValue(movie[currentXAxis], currentXAxis)}<br>
+                ${yAxisLabel}: ${formatValue(movie[currentYAxis], currentYAxis)}<br>
+                Genre: ${movie.genre}<br>
+                MPAA: ${movie.mpaa_rating}
+            `;
+            tooltip.style.opacity = '1';
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px'; 
+        });
+        
+        dot.addEventListener('mousemove', function(event) {
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 10) + 'px';
+        });
+        
+        dot.addEventListener('mouseout', function() {
+            tooltip.style.opacity = '0';
+        });
+        
+        scatterPlot.appendChild(dot);
+    });
+}
+
+/*
+Helper function to format values according to their type
+*/
+function formatValue(value, type) {
+    if (type === 'budget' || type === 'gross_revenue' || type === 'profit') {
+        return '$' + formatMoney(value);
+    } else if (type === 'year') {
+        return Math.round(value);
+    } else if (type === 'rating') {
+        return value.toFixed(1);
+    }
+    return value;
+}
+
+// Calling updateScatterPlot when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const existingHandler = document.addEventListener;
+    
+    setTimeout(updateScatterPlot, 1000); // Give time for data to load
+});
