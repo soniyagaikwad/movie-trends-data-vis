@@ -178,7 +178,7 @@ function displayBarChart(movie) {
     d3.select(".bar-chart").select("svg").remove();
 
     // Set up dimensions
-    const margin = {top: 10, right: 10, bottom: 30, left: 50};
+    const margin = { top: 10, right: 10, bottom: 30, left: 50 };
     const width = 250 - margin.left - margin.right;
     const height = 150 - margin.top - margin.bottom;
 
@@ -201,22 +201,35 @@ function displayBarChart(movie) {
         .domain(barData.map(d => d.name))
         .range([0, width])
         .padding(0.4);
-    svg.append("g")
+
+    const xAxis = svg.append("g")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
+        .call(d3.axisBottom(x));
+
+    xAxis.selectAll("text")
         .style("font-size", "10px")
-        .style("fill", "#294a96");
+        .style("fill", "#294a96")
+        .style("font-family", "'Courier Prime', monospace");
+
+    xAxis.selectAll("line, path")
+        .style("stroke", "#294a96");
 
     // Y-axis
     const y = d3.scaleLinear()
         .domain([0, d3.max(barData, d => d.value) * 1.1])
         .range([height, 0]);
-    svg.append("g")
-        .call(d3.axisLeft(y).ticks(5))
-        .selectAll("text")
+
+    const yAxis = svg.append("g")
+        .call(d3.axisLeft(y).ticks(5));
+
+    yAxis.selectAll("text")
         .style("font-size", "10px")
-        .style("fill", "#294a96");
+        .style("fill", "#294a96")
+        .style("font-family", "'Courier Prime', monospace");
+
+    yAxis.selectAll("line, path")
+        .style("stroke", "#294a96");
+
 
     // Bars
     svg.selectAll("rect")
