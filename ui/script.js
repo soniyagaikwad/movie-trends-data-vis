@@ -169,7 +169,7 @@ function displayDonutChart(movie) {
         .attr("dy", "0.35em")
         .style("font-family", "'Courier Prime', monospace")
         .style("font-size", "18px")
-        .style("font-weight", "bold")
+        // .style("font-weight", "bold")
         .style("fill", "#294a96")
         .text(`${percentage}%`);
 }
