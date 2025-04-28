@@ -123,20 +123,112 @@ function displayMovieDetails(movie) {
     const movieSummaryText = document.querySelector('.movie-summary p');
     movieSummaryText.textContent = movie.summary;
 
+    displayDonutChart(movie);
+    displayBarChart(movie);
+}
+
+function displayDonutChart(movie) {
+    d3.select("#donut-chart svg").remove();
+
+    const width = 150;
+    const height = 150;
+    const thickness = 20;
+    const radius = Math.min(width, height) / 2;
+
     const percentage = Math.round(movie.rating * 10);
-    const donutChart = document.querySelector('.donut-chart');
-    donutChart.style.background = `conic-gradient(#294a96 ${percentage}%, #f27341 ${percentage}%)`;
 
-    const percentageDisplay = document.querySelector('.percentage');
-    percentageDisplay.textContent = `${percentage}%`;
+    const svg = d3.select("#donut-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
-    // TODO: fix implementation
-    const maxValue = Math.max(movie.budget, movie.gross_revenue);
-    const budgetHeight = movie.budget > 0 ? (movie.budget / maxValue) * 100 : 5;
-    const revenueHeight = movie.gross_revenue > 0 ? (movie.gross_revenue / maxValue) * 100 : 5;
+    const backgroundArc = d3.arc()
+        .innerRadius(radius - thickness)
+        .outerRadius(radius)
+        .startAngle(0)
+        .endAngle(2 * Math.PI);
 
-    document.querySelector('.bar-budget').style.height = `${budgetHeight}%`;
-    document.querySelector('.bar .bar-revenue').style.height = `${revenueHeight}%`;
+    svg.append("path")
+        .attr("d", backgroundArc())
+        .attr("fill", "#f27341");
+
+    const foregroundArc = d3.arc()
+        .innerRadius(radius - thickness)
+        .outerRadius(radius)
+        .startAngle(0)
+        .endAngle((percentage / 100) * 2 * Math.PI);
+
+    svg.append("path")
+        .attr("d", foregroundArc())
+        .attr("fill", "#294a96");
+
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("dy", "0.35em")
+        .style("font-family", "'Courier Prime', monospace")
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("fill", "#294a96")
+        .text(`${percentage}%`);
+}
+
+function displayBarChart(movie) {
+    d3.select(".bar-chart").select("svg").remove();
+
+    // Set up dimensions
+    const margin = {top: 10, right: 10, bottom: 30, left: 50};
+    const width = 250 - margin.left - margin.right;
+    const height = 150 - margin.top - margin.bottom;
+
+    // Create SVG
+    const svg = d3.select(".bar-chart")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Data
+    const barData = [
+        { name: "Budget", value: movie.budget / 1_000_000 }, // in millions
+        { name: "Revenue", value: movie.gross_revenue / 1_000_000 }
+    ];
+
+    // X-axis
+    const x = d3.scaleBand()
+        .domain(barData.map(d => d.name))
+        .range([0, width])
+        .padding(0.4);
+    svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("font-size", "10px")
+        .style("fill", "#294a96");
+
+    // Y-axis
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(barData, d => d.value) * 1.1])
+        .range([height, 0]);
+    svg.append("g")
+        .call(d3.axisLeft(y).ticks(5))
+        .selectAll("text")
+        .style("font-size", "10px")
+        .style("fill", "#294a96");
+
+    // Bars
+    svg.selectAll("rect")
+        .data(barData)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.name))
+        .attr("width", x.bandwidth())
+        .attr("y", d => y(d.value))
+        .attr("height", d => height - y(d.value))
+        .attr("fill", d => d.name === "Budget" ? "#f27341" : "#294a96");
+
 }
 
 /*
