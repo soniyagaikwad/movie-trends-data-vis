@@ -74,6 +74,7 @@ function processData(rawData) {
 
     populateTable(data);
     createBoxPlot();
+    updateScatterPlot();
 }
 
 /*
@@ -1038,3 +1039,305 @@ function createBoxPlot() {
         .attr("stroke", "#294a96")
         .style("stroke-width", "2px");
 }
+
+/*
+to update the scatter plot based on the current X and Y axis selections
+*/
+function updateScatterPlot() {
+    if (!data) {
+        console.error("Data not loaded yet.");
+        return;
+    }
+
+    // clear existing scatter plot
+    d3.select('.scatter-plot').selectAll('*').remove();
+
+    const scatterContainer = document.querySelector('.scatter-plot');
+    const containerWidth = scatterContainer.clientWidth;
+    const containerHeight = scatterContainer.clientHeight;
+
+    // set up dimensions and margins
+    const width = 675;
+    const height = 300;
+    const margin = { top: 5, right: 30, bottom: 60, left: 80 };
+
+    // svg container
+    const svg = d3.select('.scatter-plot')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // get the axis labels based on the selected axes
+    const axisOptions = [
+        { value: 'rating', label: 'Rating' },
+        { value: 'year', label: 'Release Year' },
+        { value: 'budget', label: 'Budget' },
+        { value: 'gross_revenue', label: 'Gross Revenue' },
+        { value: 'profit', label: 'Profit' }
+    ];
+
+    const xAxisLabel = axisOptions.find(option => option.value === currentXAxis).label;
+    const yAxisLabel = axisOptions.find(option => option.value === currentYAxis).label;
+
+    let xScale, yScale;
+
+    // appropriate scales based on data type
+    if (currentXAxis === 'year') {
+        xScale = d3.scaleLinear()
+            .domain([d3.min(data, d => d[currentXAxis]) - 1, d3.max(data, d => d[currentXAxis]) + 1])
+            .range([0, width]);
+    } else {
+        xScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d[currentXAxis]) * 1.05])
+            .range([0, width]);
+    }
+
+    if (currentYAxis === 'year') {
+        yScale = d3.scaleLinear()
+            .domain([d3.min(data, d => d[currentYAxis]) - 1, d3.max(data, d => d[currentYAxis]) + 1])
+            .range([height, 0]);
+    } else {
+        yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d[currentYAxis]) * 1.05])
+            .range([height, 0]);
+    }
+
+    // get all unique genres from the data
+    const uniqueGenres = [...new Set(data.map(movie => movie.genre))];
+
+    // color for all genres
+    const genreColorScale = d3.scaleOrdinal()
+        .domain(uniqueGenres)
+        .range([
+            // oranges
+            '#ffb703', // golden orange
+            '#fb5607', // vivid flame orange
+            '#ff7b00', // tangerine
+            '#e76f51', // muted warm orange
+            '#f4a261', // sandy orange
+            
+            // blues
+            '#3a86ff', // bright blue
+            '#0077b6', // ocean blue
+            '#00b4d8', // bright teal-blue
+            '#023e8a', // deep navy
+            '#90e0ef', // pale sky blue
+            
+            // extra oranges
+            '#ffa07a', // light salmon orange
+            '#cc5803', // burnt orange
+            '#ff924c', // mango orange
+
+            // browns
+            '#d97706', // amber brown
+            '#8b4000', // rich dark brown
+        
+            // extra blues
+            '#4361ee', // royal blue
+            '#5dade2', // soft medium blue
+            '#03045e', // very deep blue
+            '#4ea8de', // mid cornflower blue
+
+        ]);
+
+    // mapping genres to colors
+    const genreColorMap = {};
+    uniqueGenres.forEach(genre => {
+        genreColorMap[genre.toLowerCase()] = genreColorScale(genre);
+    });
+
+    // x axis
+    const xAxis = svg.append('g')
+        .attr('transform', `translate(0,${height})`)
+        .call(d3.axisBottom(xScale)
+            .tickFormat(d => {
+                if (currentXAxis === 'budget' || currentXAxis === 'gross_revenue' || currentXAxis === 'profit') {
+                    if (d >= 1000000000) return (d / 1000000000) + "B";
+                    if (d >= 1000000) return (d / 1000000) + "M";
+                    if (d >= 1000) return (d / 1000) + "K";
+                    return d;
+                }
+                return d;
+            }));
+
+    xAxis.selectAll('text')
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '12px')
+        .style('fill', '#294a96');
+
+    xAxis.selectAll('line, path')
+        .style('stroke', '#294a96');
+
+    // y axis
+    const yAxis = svg.append('g')
+        .call(d3.axisLeft(yScale)
+            .tickFormat(d => {
+                if (currentYAxis === 'budget' || currentYAxis === 'gross_revenue' || currentYAxis === 'profit') {
+                    if (d >= 1000000000) return (d / 1000000000) + "B";
+                    if (d >= 1000000) return (d / 1000000) + "M";
+                    if (d >= 1000) return (d / 1000) + "K";
+                    return d;
+                }
+                return d;
+            }));
+
+    yAxis.selectAll('text')
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '12px')
+        .style('fill', '#294a96');
+
+    yAxis.selectAll('line, path')
+        .style('stroke', '#294a96');
+
+    // x axis label
+    svg.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom - 15)
+        .text(xAxisLabel)
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '14px')
+        .style('fill', '#294a96');
+
+    // y axis label
+    svg.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -margin.left + 20)
+        .attr('x', -height / 2)
+        .text(yAxisLabel)
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '14px')
+        .style('fill', '#294a96');
+
+    // grid lines for readability
+    svg.append('g')
+        .attr('class', 'grid')
+        .call(d3.axisLeft(yScale)
+            .tickSize(-width)
+            .tickFormat('')
+        )
+        .style('opacity', 0.1)
+        .selectAll('line')
+        .style('stroke', '#294a96');
+
+    // add dots with tooltip
+    svg.append('g')
+        .selectAll('dot')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', d => xScale(d[currentXAxis]))
+        .attr('cy', d => yScale(d[currentYAxis]))
+        .attr('r', 4)
+        .style('fill', d => genreColorMap[d.genre.toLowerCase()] || '#BDBDBD')
+        .style('stroke', '#294a96')
+        .style('stroke-width', 1)
+        .style('opacity', 0.7)
+        .on('mouseover', function (event, d) {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style('opacity', 1)
+                .attr('r', 7);
+
+            d3.select("#tooltip")
+                .style("opacity", 1)
+                .html(`
+                    <strong>${d.movie}</strong><br>
+                    ${xAxisLabel}: ${formatValue(d[currentXAxis], currentXAxis)}<br>
+                    ${yAxisLabel}: ${formatValue(d[currentYAxis], currentYAxis)}<br>
+                    Genre: ${d.genre}<br>
+                    MPAA: ${d.mpaa_rating}
+                `)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 20) + "px")
+                .style("background-color", "white")
+                .style("border", "1px solid #f27341")
+                .style("padding", "10px")
+                .style("font-family", "'Courier Prime', monospace")
+                .style("color", "#294a96");
+        })
+        .on('mousemove', function (event) {
+            d3.select("#tooltip")
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 20) + "px");
+        })
+        .on('mouseout', function () {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style('opacity', 0.7)
+                .attr('r', 4);
+
+            d3.select("#tooltip")
+                .style("opacity", 0);
+        });
+
+    updateGenreLegend(genreColorMap, uniqueGenres);
+}
+
+/*
+helper function to update the legend with all genres
+*/
+function updateGenreLegend(colorMap, uniqueGenres) {
+    const legend = d3.select('.legend');
+    legend.selectAll('*').remove();
+
+    const legendWrapper = legend.append('div')
+        .style('max-height', 'none')
+        .style('overflow-y', 'visible')
+        .style('padding', '1px')
+        .style('column-count', '8')
+        .style('column-gap', '5px');
+
+    uniqueGenres.sort().forEach(genre => {
+        const genreLower = genre.toLowerCase();
+
+        const legendItem = legendWrapper.append('div')
+            .attr('class', 'legend-item')
+            .style('display', 'inline-block')
+            .style('width', '100%')
+            .style('margin-bottom', '5px');
+
+        legendItem.append('div')
+            .attr('class', 'legend-color')
+            .style('background-color', colorMap[genreLower])
+            .style('width', '12px')
+            .style('height', '12px')
+            .style('display', 'inline-block')
+            .style('margin-right', '5px')
+            .style('vertical-align', 'middle');
+
+        legendItem.append('text')
+            .text(genre)
+            .style('font-size', '10px')
+            .style('font-family', "'Courier Prime', monospace")
+            .style('color', '#294a96')
+            .style('vertical-align', 'middle');
+    });
+}
+
+/*
+helper function to format values according to their type
+*/
+function formatValue(value, type) {
+    if (type === 'budget' || type === 'gross_revenue' || type === 'profit') {
+        return '$' + formatMoney(value);
+    } else if (type === 'year') {
+        return Math.round(value);
+    } else if (type === 'rating') {
+        return value.toFixed(1);
+    }
+    return value;
+}
+
+// Calling updateScatterPlot when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+
+    const existingHandler = document.addEventListener;
+
+    setTimeout(updateScatterPlot, 1000);
+});

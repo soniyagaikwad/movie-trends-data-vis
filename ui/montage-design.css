@@ -315,33 +315,6 @@ body {
     font-weight: normal;
 }
 
-.scatter-plot {
-    background-color: #f9f3f0;
-    height: 300px;
-    position: relative;
-    margin-top: 20px;
-    margin-right: 50px;
-}
-
-.legend {
-    display: flex;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #294a96;
-}
-
-.legend-item {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.legend-color {
-    width: 12px;
-    height: 12px;
-    margin-right: 5px;
-}
-
 .note-box {
     border: 1px solid #f27341;
     padding: 15px;
@@ -418,18 +391,82 @@ body {
     justify-content: space-around;
     margin-top: 10px;
 }
+ 
+/* Scatter Plot Styles */
+.scatter-plot {
+    background-color: #f9f3f0;
+    height: 300px;
+    position: relative;
+    margin-top: 20px;
+    margin-right: 50px;
+}
 
 .scatter-plot .dot {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.scatter-plot .dot:hover {
+    transform: scale(1.5);
+    z-index: 10;
+}
+
+.axis-label {
+    position: absolute;
+    color: #294a96;
+    font-size: 10px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.axis-title {
+    position: absolute;
+    color: #294a96;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* Update Legend Styles */
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #294a96;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
     border-radius: 50%;
 }
 
-/* Legend colors */
-.comedy { background-color: #ffb703; }
-.romance { background-color: #c1121f; }
-.thriller { background-color: #432818; }
-.action { background-color: #8b8c89; }
-.drama { background-color: #7b2cbf; }
-.adventure { background-color: #6a994e; }
+/* Tooltip styles */
+#scatter-tooltip {
+    position: absolute;
+    border: 1px solid #f27341;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: #294a96;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
