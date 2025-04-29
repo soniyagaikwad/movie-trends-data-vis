@@ -1041,7 +1041,7 @@ function createBoxPlot() {
 }
 
 /*
-To update the scatter plot based on the current X and Y axis selections
+to update the scatter plot based on the current X and Y axis selections
 */
 function updateScatterPlot() {
     if (!data) {
@@ -1049,14 +1049,27 @@ function updateScatterPlot() {
         return;
     }
 
-    // Clear existing dots
-    const scatterPlot = document.querySelector('.scatter-plot');
-    
-    // Remove all dots but keep the axis labels
-    const dots = scatterPlot.querySelectorAll('.dot');
-    dots.forEach(dot => dot.remove());
+    // clear existing scatter plot
+    d3.select('.scatter-plot').selectAll('*').remove();
 
-    // Get the axis labels based on the selected axes
+    const scatterContainer = document.querySelector('.scatter-plot');
+    const containerWidth = scatterContainer.clientWidth;
+    const containerHeight = scatterContainer.clientHeight;
+
+    // set up dimensions and margins
+    const margin = { top: 30, right: 30, bottom: 60, left: 80 },
+        width = containerWidth - margin.left - margin.right - 10,
+        height = containerHeight - margin.top - margin.bottom - 10;
+
+    // svg container
+    const svg = d3.select('.scatter-plot')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // get the axis labels based on the selected axes
     const axisOptions = [
         { value: 'rating', label: 'Rating' },
         { value: 'year', label: 'Release Year' },
@@ -1068,148 +1081,241 @@ function updateScatterPlot() {
     const xAxisLabel = axisOptions.find(option => option.value === currentXAxis).label;
     const yAxisLabel = axisOptions.find(option => option.value === currentYAxis).label;
 
-    // Update X and Y axis titles
-    const xAxisTitle = document.createElement('div');
-    xAxisTitle.className = 'axis-title';
-    xAxisTitle.style.bottom = '-40px';
-    xAxisTitle.style.left = '50%';
-    xAxisTitle.style.transform = 'translateX(-50%)';
-    xAxisTitle.textContent = xAxisLabel;
+    let xScale, yScale;
 
-    const yAxisTitle = document.createElement('div');
-    yAxisTitle.className = 'axis-title';
-    yAxisTitle.style.top = '50%';
-    yAxisTitle.style.left = '-120px';
-    yAxisTitle.style.transform = 'rotate(-90deg) translateX(50%)';
-    yAxisTitle.textContent = yAxisLabel;
+    // appropriate scales based on data type
+    if (currentXAxis === 'year') {
+        xScale = d3.scaleLinear()
+            .domain([d3.min(data, d => d[currentXAxis]) - 1, d3.max(data, d => d[currentXAxis]) + 1])
+            .range([0, width]);
+    } else {
+        xScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d[currentXAxis]) * 1.05])
+            .range([0, width]);
+    }
 
-    // Remove existing axis titles if they exist
-    const existingTitles = scatterPlot.querySelectorAll('.axis-title');
-    existingTitles.forEach(title => title.remove());
+    if (currentYAxis === 'year') {
+        yScale = d3.scaleLinear()
+            .domain([d3.min(data, d => d[currentYAxis]) - 1, d3.max(data, d => d[currentYAxis]) + 1])
+            .range([height, 0]);
+    } else {
+        yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d[currentYAxis]) * 1.05])
+            .range([height, 0]);
+    }
 
-    scatterPlot.appendChild(xAxisTitle);
-    scatterPlot.appendChild(yAxisTitle);
-
-    // Clear existing x and y axis labels
-    const existingLabels = scatterPlot.querySelectorAll('.axis-label');
-    existingLabels.forEach(label => label.remove());
-
-    // Determine data range for the selected axes
-    let xMin = Infinity, xMax = -Infinity;
-    let yMin = Infinity, yMax = -Infinity;
-
-    data.forEach(movie => {
-        if (movie[currentXAxis] < xMin) xMin = movie[currentXAxis];
-        if (movie[currentXAxis] > xMax) xMax = movie[currentXAxis];
-        if (movie[currentYAxis] < yMin) yMin = movie[currentYAxis];
-        if (movie[currentYAxis] > yMax) yMax = movie[currentYAxis];
+    // get all unique genres from the data
+    const uniqueGenres = [...new Set(data.map(movie => movie.genre))];
+    
+    // color for all genres
+    const genreColorScale = d3.scaleOrdinal()
+        .domain(uniqueGenres)
+        .range([
+            // oranges
+            '#ffb703', // golden orange
+            '#fb5607', // vivid flame orange
+            '#ff7b00', // tangerine
+            '#e76f51', // muted warm orange
+            '#f4a261', // sandy orange
+        
+            // blues
+            '#3a86ff', // bright blue
+            '#0077b6', // ocean blue
+            '#00b4d8', // bright teal-blue
+            '#023e8a', // deep navy
+            '#90e0ef', // pale sky blue
+        
+            // extra oranges
+            '#ffa07a', // light salmon orange
+            '#cc5803', // burnt orange
+        
+            // extra blues
+            '#4361ee', // royal blue
+            '#5dade2', // soft medium blue
+            '#03045e'  // very deep blue
+        ]);
+        
+        
+    // mapping genres to colors
+    const genreColorMap = {};
+    uniqueGenres.forEach(genre => {
+        genreColorMap[genre.toLowerCase()] = genreColorScale(genre);
     });
 
-    // Add some padding to the ranges
-    xMin = Math.max(0, xMin - (xMax - xMin) * 0.05);
-    xMax = xMax + (xMax - xMin) * 0.05;
-    yMin = Math.max(0, yMin - (yMax - yMin) * 0.05);
-    yMax = yMax + (yMax - yMin) * 0.05;
+    // x axis
+    const xAxis = svg.append('g')
+        .attr('transform', `translate(0,${height})`)
+        .call(d3.axisBottom(xScale)
+            .tickFormat(d => {
+                if (currentXAxis === 'budget' || currentXAxis === 'gross_revenue' || currentXAxis === 'profit') {
+                    if (d >= 1000000000) return (d / 1000000000) + "B";
+                    if (d >= 1000000) return (d / 1000000) + "M";
+                    if (d >= 1000) return (d / 1000) + "K";
+                    return d;
+                }
+                return d;
+            }));
 
-    // Create X-axis labels
-    const xSteps = 5;
-    for (let i = 0; i <= xSteps; i++) {
-        const value = xMin + (xMax - xMin) * (i / xSteps);
-        const label = document.createElement('div');
-        label.className = 'axis-label';
-        label.style.left = `${(i/ xSteps) * 99}%`;
-        label.style.bottom = '-15px';
-        
-        // Format based on axis type
-        if (currentXAxis === 'budget' || currentXAxis === 'gross_revenue' || currentXAxis === 'profit') {
-            label.textContent = formatMoney(value);
-        } else if (currentXAxis === 'year') {
-            label.textContent = Math.round(value);
-        } else {
-            label.textContent = value.toFixed(1);
-        }
-        
-        scatterPlot.appendChild(label);
-    }
+    xAxis.selectAll('text')
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '12px')
+        .style('fill', '#294a96');
+    
+    xAxis.selectAll('line, path')
+        .style('stroke', '#294a96');
 
-    // Create Y-axis labels
-    const ySteps = 5;
-    for (let i = 0; i <= ySteps; i++) {
-        const value = yMin + (yMax - yMin) * (i / ySteps);
-        const label = document.createElement('div');
-        label.className = 'axis-label';
-        label.style.bottom = `${(i / ySteps) * 97}%`;
-        label.style.left = '-50px';
-        
-        // Format based on axis type
-        if (currentYAxis === 'budget' || currentYAxis === 'gross_revenue' || currentYAxis === 'profit') {
-            label.textContent = formatMoney(value);
-        } else if (currentYAxis === 'year') {
-            label.textContent = Math.round(value);
-        } else {
-            label.textContent = value.toFixed(1);
-        }
-        scatterPlot.appendChild(label);
-    }
+    // y axis
+    const yAxis = svg.append('g')
+        .call(d3.axisLeft(yScale)
+            .tickFormat(d => {
+                if (currentYAxis === 'budget' || currentYAxis === 'gross_revenue' || currentYAxis === 'profit') {
+                    if (d >= 1000000000) return (d / 1000000000) + "B";
+                    if (d >= 1000000) return (d / 1000000) + "M";
+                    if (d >= 1000) return (d / 1000) + "K";
+                    return d;
+                }
+                return d;
+            }));
 
-    // Add dots for each movie (limit to a manageable number for performance)
-    const maxDots = 200;
-    const movieSample = data.length > maxDots ? 
-        data.sort(() => 0.5 - Math.random()).slice(0, maxDots) : 
-        data;
+    yAxis.selectAll('text')
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '12px')
+        .style('fill', '#294a96');
+    
+    yAxis.selectAll('line, path')
+        .style('stroke', '#294a96');
 
-    const genreColors = {
-        'comedy': 'comedy',
-        'romance': 'romance',
-        'thriller': 'thriller',
-        'action': 'action',
-        'drama': 'drama',
-        'adventure': 'adventure'
-    };
+    // x axis label
+    svg.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom - 15)
+        .text(xAxisLabel)
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '14px')
+        .style('fill', '#294a96');
 
-    movieSample.forEach(movie => {
-        if (movie[currentXAxis] === undefined || movie[currentYAxis] === undefined) return;
-        
-        // Create a dot for the movie
-        const dot = document.createElement('div');
-        dot.className = `dot ${genreColors[movie.genre.toLowerCase()] || 'comedy'}`;
-        
-        // Position based on data values
-        const xPos = ((movie[currentXAxis] - xMin) / (xMax - xMin)) * 100;
-        const yPos = ((movie[currentYAxis] - yMin) / (yMax - yMin)) * 100;
-        
-        dot.style.left = `${xPos}%`;
-        dot.style.bottom = `${yPos}%`;
-        
-        // Add mouseover tooltip
-        dot.addEventListener('mouseover', function(event) {
-            tooltip.innerHTML = `
-                <strong>${movie.movie}</strong><br>
-                ${xAxisLabel}: ${formatValue(movie[currentXAxis], currentXAxis)}<br>
-                ${yAxisLabel}: ${formatValue(movie[currentYAxis], currentYAxis)}<br>
-                Genre: ${movie.genre}<br>
-                MPAA: ${movie.mpaa_rating}
-            `;
-            tooltip.style.opacity = '1';
-            tooltip.style.left = (event.pageX + 10) + 'px';
-            tooltip.style.top = (event.pageY - 10) + 'px'; 
+    // y axis label
+    svg.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -margin.left + 20)
+        .attr('x', -height / 2)
+        .text(yAxisLabel)
+        .style('font-family', "'Courier Prime', monospace")
+        .style('font-size', '14px')
+        .style('fill', '#294a96');
+
+    // grid lines for readability
+    svg.append('g')
+        .attr('class', 'grid')
+        .call(d3.axisLeft(yScale)
+            .tickSize(-width)
+            .tickFormat('')
+        )
+        .style('opacity', 0.1)
+        .selectAll('line')
+        .style('stroke', '#294a96');
+
+    // add dots with tooltip
+    svg.append('g')
+        .selectAll('dot')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', d => xScale(d[currentXAxis]))
+        .attr('cy', d => yScale(d[currentYAxis]))
+        .attr('r', 4)
+        .style('fill', d => genreColorMap[d.genre.toLowerCase()] || '#BDBDBD')
+        .style('stroke', '#294a96')
+        .style('stroke-width', 1)
+        .style('opacity', 0.7)
+        .on('mouseover', function(event, d) {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style('opacity', 1)
+                .attr('r', 7);
+            
+            d3.select("#tooltip")
+                .style("opacity", 1)
+                .html(`
+                    <strong>${d.movie}</strong><br>
+                    ${xAxisLabel}: ${formatValue(d[currentXAxis], currentXAxis)}<br>
+                    ${yAxisLabel}: ${formatValue(d[currentYAxis], currentYAxis)}<br>
+                    Genre: ${d.genre}<br>
+                    MPAA: ${d.mpaa_rating}
+                `)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 20) + "px")
+                .style("background-color", "white")
+                .style("border", "1px solid #f27341")
+                .style("padding", "10px")
+                .style("font-family", "'Courier Prime', monospace")
+                .style("color", "#294a96");
+        })
+        .on('mousemove', function(event) {
+            d3.select("#tooltip")
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 20) + "px");
+        })
+        .on('mouseout', function() {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style('opacity', 0.7)
+                .attr('r', 4);
+            
+            d3.select("#tooltip")
+                .style("opacity", 0);
         });
+
+    updateGenreLegend(genreColorMap, uniqueGenres);
+}
+
+/*
+helper function to update the legend with all genres
+*/
+function updateGenreLegend(colorMap, uniqueGenres) {
+    const legend = d3.select('.legend');
+    legend.selectAll('*').remove();
+
+    const legendWrapper = legend.append('div')
+        .style('max-height', 'none')
+        .style('overflow-y', 'visible')
+        .style('padding', '1px')
+        .style('column-count', '8')
+        .style('column-gap', '15px');
+
+    uniqueGenres.sort().forEach(genre => {
+        const genreLower = genre.toLowerCase();
         
-        dot.addEventListener('mousemove', function(event) {
-            tooltip.style.left = (event.pageX + 10) + 'px';
-            tooltip.style.top = (event.pageY - 10) + 'px';
-        });
+        const legendItem = legendWrapper.append('div')
+            .attr('class', 'legend-item')
+            .style('display', 'inline-block')
+            .style('width', '100%')
+            .style('margin-bottom', '5px');
         
-        dot.addEventListener('mouseout', function() {
-            tooltip.style.opacity = '0';
-        });
+        legendItem.append('div')
+            .attr('class', 'legend-color')
+            .style('background-color', colorMap[genreLower])
+            .style('width', '12px')
+            .style('height', '12px')
+            .style('display', 'inline-block')
+            .style('margin-right', '5px')
+            .style('vertical-align', 'middle');
         
-        scatterPlot.appendChild(dot);
+        legendItem.append('text')
+            .text(genre)
+            .style('font-size', '10px')
+            .style('font-family', "'Courier Prime', monospace")
+            .style('color', '#294a96')
+            .style('vertical-align', 'middle');
     });
 }
 
 /*
-Helper function to format values according to their type
+helper function to format values according to their type
 */
 function formatValue(value, type) {
     if (type === 'budget' || type === 'gross_revenue' || type === 'profit') {
@@ -1227,5 +1333,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const existingHandler = document.addEventListener;
     
-    setTimeout(updateScatterPlot, 1000); // Give time for data to load
+    setTimeout(updateScatterPlot, 1000);
 });
