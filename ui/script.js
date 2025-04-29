@@ -74,7 +74,7 @@ function processData(rawData) {
 
     populateTable(data);
     createBoxPlot();
-    updateScatterPlot(); 
+    updateScatterPlot();
 }
 
 /*
@@ -1057,9 +1057,9 @@ function updateScatterPlot() {
     const containerHeight = scatterContainer.clientHeight;
 
     // set up dimensions and margins
-    const margin = { top: 30, right: 30, bottom: 60, left: 80 },
-        width = containerWidth - margin.left - margin.right - 10,
-        height = containerHeight - margin.top - margin.bottom - 10;
+    const width = 675;
+    const height = 300;
+    const margin = { top: 5, right: 30, bottom: 60, left: 80 };
 
     // svg container
     const svg = d3.select('.scatter-plot')
@@ -1106,7 +1106,7 @@ function updateScatterPlot() {
 
     // get all unique genres from the data
     const uniqueGenres = [...new Set(data.map(movie => movie.genre))];
-    
+
     // color for all genres
     const genreColorScale = d3.scaleOrdinal()
         .domain(uniqueGenres)
@@ -1117,25 +1117,31 @@ function updateScatterPlot() {
             '#ff7b00', // tangerine
             '#e76f51', // muted warm orange
             '#f4a261', // sandy orange
-        
+            
             // blues
             '#3a86ff', // bright blue
             '#0077b6', // ocean blue
             '#00b4d8', // bright teal-blue
             '#023e8a', // deep navy
             '#90e0ef', // pale sky blue
-        
+            
             // extra oranges
             '#ffa07a', // light salmon orange
             '#cc5803', // burnt orange
+            '#ff924c', // mango orange
+
+            // browns
+            '#d97706', // amber brown
+            '#8b4000', // rich dark brown
         
             // extra blues
             '#4361ee', // royal blue
             '#5dade2', // soft medium blue
-            '#03045e'  // very deep blue
+            '#03045e', // very deep blue
+            '#4ea8de', // mid cornflower blue
+
         ]);
-        
-        
+
     // mapping genres to colors
     const genreColorMap = {};
     uniqueGenres.forEach(genre => {
@@ -1160,7 +1166,7 @@ function updateScatterPlot() {
         .style('font-family', "'Courier Prime', monospace")
         .style('font-size', '12px')
         .style('fill', '#294a96');
-    
+
     xAxis.selectAll('line, path')
         .style('stroke', '#294a96');
 
@@ -1181,7 +1187,7 @@ function updateScatterPlot() {
         .style('font-family', "'Courier Prime', monospace")
         .style('font-size', '12px')
         .style('fill', '#294a96');
-    
+
     yAxis.selectAll('line, path')
         .style('stroke', '#294a96');
 
@@ -1230,13 +1236,13 @@ function updateScatterPlot() {
         .style('stroke', '#294a96')
         .style('stroke-width', 1)
         .style('opacity', 0.7)
-        .on('mouseover', function(event, d) {
+        .on('mouseover', function (event, d) {
             d3.select(this)
                 .transition()
                 .duration(200)
                 .style('opacity', 1)
                 .attr('r', 7);
-            
+
             d3.select("#tooltip")
                 .style("opacity", 1)
                 .html(`
@@ -1254,18 +1260,18 @@ function updateScatterPlot() {
                 .style("font-family", "'Courier Prime', monospace")
                 .style("color", "#294a96");
         })
-        .on('mousemove', function(event) {
+        .on('mousemove', function (event) {
             d3.select("#tooltip")
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 20) + "px");
         })
-        .on('mouseout', function() {
+        .on('mouseout', function () {
             d3.select(this)
                 .transition()
                 .duration(200)
                 .style('opacity', 0.7)
                 .attr('r', 4);
-            
+
             d3.select("#tooltip")
                 .style("opacity", 0);
         });
@@ -1285,17 +1291,17 @@ function updateGenreLegend(colorMap, uniqueGenres) {
         .style('overflow-y', 'visible')
         .style('padding', '1px')
         .style('column-count', '8')
-        .style('column-gap', '15px');
+        .style('column-gap', '5px');
 
     uniqueGenres.sort().forEach(genre => {
         const genreLower = genre.toLowerCase();
-        
+
         const legendItem = legendWrapper.append('div')
             .attr('class', 'legend-item')
             .style('display', 'inline-block')
             .style('width', '100%')
             .style('margin-bottom', '5px');
-        
+
         legendItem.append('div')
             .attr('class', 'legend-color')
             .style('background-color', colorMap[genreLower])
@@ -1304,7 +1310,7 @@ function updateGenreLegend(colorMap, uniqueGenres) {
             .style('display', 'inline-block')
             .style('margin-right', '5px')
             .style('vertical-align', 'middle');
-        
+
         legendItem.append('text')
             .text(genre)
             .style('font-size', '10px')
@@ -1329,9 +1335,9 @@ function formatValue(value, type) {
 }
 
 // Calling updateScatterPlot when the DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     const existingHandler = document.addEventListener;
-    
+
     setTimeout(updateScatterPlot, 1000);
 });

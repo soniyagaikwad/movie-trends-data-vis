@@ -315,33 +315,6 @@ body {
     font-weight: normal;
 }
 
-/* .scatter-plot {
-    background-color: #f9f3f0;
-    height: 300px;
-    position: relative;
-    margin-top: 20px;
-    margin-right: 50px;
-}
-
-.legend {
-    display: flex;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #294a96;
-}
-
-.legend-item {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.legend-color {
-    width: 12px;
-    height: 12px;
-    margin-right: 5px;
-} */
-
 .note-box {
     border: 1px solid #f27341;
     padding: 15px;
@@ -418,22 +391,7 @@ body {
     justify-content: space-around;
     margin-top: 10px;
 }
-
-.scatter-plot .dot {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-/* Legend colors */
-.comedy { background-color: #ffb703; }
-.romance { background-color: #c1121f; }
-.thriller { background-color: #432818; }
-.action { background-color: #8b8c89; }
-.drama { background-color: #7b2cbf; }
-.adventure { background-color: #6a994e; }
-
+ 
 /* Scatter Plot Styles */
 .scatter-plot {
     background-color: #f9f3f0;
