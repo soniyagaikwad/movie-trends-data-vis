@@ -8,6 +8,10 @@ _Montage: Exploring Movie Trends Over Time_ is a web-based interactive visualiza
 
 To deploy _Montage: Exploring Movie Trends Over Time_, right-click the `montage.html` file in the `ui` folder, and click on `Open with Live Server`. The website should automatically deploy in your browser.
 
+## Project Screencast
+
+To find a demo of _Montage: Exploring Movie Trends Over Time_, you can watch the [video on YouTube](https://youtu.be/58AbuQt9inQ), or find the `montage-screencast.mp4` file in the `screencast` folder.
+
 ## Datasets
 
 In the `data` folder, we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
