@@ -16,6 +16,10 @@ To find a demo of _Montage: Exploring Movie Trends Over Time_, you can watch the
 
 In the `data` folder, we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
 
+## Code Description
+
+All our code for _Montage: Exploring Movie Trends Over Time_ is written in the `website` folder, which consists of `montage.html`, `montage-design.css`, and `script.js`. These code files handle our data processing, UI design, and interaction with the visualization tool.
+
 ## Authors
 
 - Soniya Gaikwad
