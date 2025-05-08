@@ -476,7 +476,7 @@ body {
     grid-column: span 2;
     background-color: #f9f3f0;
     padding: 20px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 
 .video-section h2 {
