@@ -14,7 +14,7 @@ To find a demo of _Montage: Exploring Movie Trends Over Time_, you can watch the
 
 ## Datasets
 
-In the `data` folder, we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
+In the `data` folder (which is inside the `docs` folder), we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
 
 ## Code Description
 
