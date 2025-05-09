@@ -18,7 +18,7 @@ In the `data` folder, we have a `movies.csv` file, which is a dataset from [Kagg
 
 ## Code Description
 
-All our code for _Montage: Exploring Movie Trends Over Time_ is written in the `website` folder, which consists of `montage.html`, `montage-design.css`, and `script.js`. These code files handle our data processing, UI design, and interaction with the visualization tool.
+All our code for _Montage: Exploring Movie Trends Over Time_ is written in the `docs` folder, which consists of `index.html`, `montage-design.css`, and `script.js`. These code files handle our data processing, UI design, and interaction with the visualization tool.
 
 ## Authors
 
