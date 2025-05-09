@@ -9,7 +9,8 @@
     <title>Montage: Exploring Movie Trends</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="montage-design.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="script.js"></script>
@@ -20,14 +21,15 @@
         <!-- Header Section -->
         <div class="header">
             <h1>Montage: Exploring Movie Trends Over Time</h1>
-            <p>montage (n): a cinematic technique to combine short pieces of information to create a cohesive sequence, to convey a larger narrative.</p>
+            <p>montage (n): a cinematic technique to combine short pieces of information to create a cohesive sequence,
+                to convey a larger narrative.</p>
         </div>
-        
+
         <!-- Montage Box -->
         <div class="montage-box">
             <h1 class="big-title">Montage</h1>
         </div>
-        
+
         <!-- Search Section -->
         <div class="search-section">
             <div class="search-container">
@@ -60,52 +62,64 @@
                 </table>
             </div>
         </div>
-        
+
         <!-- Movie Summary Section -->
         <div class="movie-summary">
             <h2>Movie Summary</h2>
             <p>select a movie from the table to get the movie summary here in more detail.</p>
-            
+
             <div class="charts-container">
                 <div class="pie-chart" id="donut-chart">
                 </div>
-                
+
                 <div class="bar-chart">
                     <div style="font-size: 10px; margin-bottom: 15px;">
                         <span style="color: #f27341;">■ Budget ($ Millions)</span>
                         <span style="color: #294a96; margin-left: 10px;">■ Revenue ($ Millions)</span>
                     </div>
                     <div class="bar-container">
-                    
+
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Compare Section -->
         <div class="compare-section">
             <div>
                 <h2>Compare All Movies</h2>
                 <div class="legend">
-                    <div class="legend-item"><div class="legend-color comedy"></div> Comedy</div>
-                    <div class="legend-item"><div class="legend-color romance"></div> Romance</div>
-                    <div class="legend-item"><div class="legend-color thriller"></div> Thriller</div>
-                    <div class="legend-item"><div class="legend-color action"></div> Action</div>
-                    <div class="legend-item"><div class="legend-color drama"></div> Drama</div>
-                    <div class="legend-item"><div class="legend-color adventure"></div> Adventure</div>
+                    <div class="legend-item">
+                        <div class="legend-color comedy"></div> Comedy
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color romance"></div> Romance
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color thriller"></div> Thriller
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color action"></div> Action
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color drama"></div> Drama
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color adventure"></div> Adventure
+                    </div>
                 </div>
-                
+
                 <div class="scatter-plot">
 
                 </div>
             </div>
-            
+
             <div>
                 <div class="note-box">
                     <p>NOTE!</p>
                     <p>Play around with this graph by editing the x-axis and y-axis!</p>
                 </div>
-                
+
                 <div class="axis-selector">
                     <button class="axis-button">
                         <span class="triangle">▼</span>
@@ -119,15 +133,32 @@
             </div>
         </div>
         <div id="tooltip" style="
-        position: absolute;
-        background: white;
-        border: 1px solid #ccc;
-        padding: 10px;
-        font-size: 12px;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;"></div>
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;">
+        </div>
+
+        <!-- Video Section -->
+        <div class="video-section">
+            <h2>Montage Screencast</h2>
+            <div class="video-container">
+                <video controls>
+                    <source src="montage-screencast.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-description">
+                <p>A visual exploration of movie trends and data analysis presented in Montage</p>
+            </div>
+        </div>
+
     </div>
 
 </body>
+
 </html>

@@ -470,3 +470,38 @@ body {
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+/* Video Section Styles */
+.video-section {
+    grid-column: span 2;
+    background-color: #f9f3f0;
+    padding: 20px;
+    /* margin-top: 20px; */
+}
+
+.video-section h2 {
+    color: #294a96;
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.video-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.video-container video {
+    width: 100%;
+    max-width: 900px;
+    border: 1px solid #f27341;
+}
+
+.video-description {
+    color: #294a96;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1.5;
+    font-size: 14px;
+}

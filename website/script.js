@@ -866,6 +866,8 @@ function createBoxPlot() {
     }
 
     d3.select("#boxplot-container svg").remove();
+    let video_container = document.getElementsByClassName("video-section")[0];
+    d3.select(".video-section").remove();
 
     const groupedData = groupGrossByRating();
 
@@ -907,6 +909,7 @@ function createBoxPlot() {
         boxplotContainer.appendChild(title);
 
         document.querySelector('.container').appendChild(boxplotContainer);
+        document.querySelector('.container').appendChild(video_container);
     }
 
     const svg = d3.select("#boxplot-container")
