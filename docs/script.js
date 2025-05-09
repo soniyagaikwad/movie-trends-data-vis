@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
   data cleaning and loading
 */
 function setUp() {
-    d3.csv('../data/movies.csv')
+    d3.csv('./data/movies.csv')
         .then(dataOutput => {
             dataOutput = dataOutput.slice(0, 509);
             console.log('CSV data loaded successfully');
