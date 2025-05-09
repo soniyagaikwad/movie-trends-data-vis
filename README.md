@@ -4,9 +4,13 @@
 
 _Montage: Exploring Movie Trends Over Time_ is a web-based interactive visualization tool that uses different elements to explore movie trends over time!
 
-## Deployment
+## GitHub Pages
 
-To deploy _Montage: Exploring Movie Trends Over Time_, right-click the `index.html` file in the `docs` folder, and click on `Open with Live Server`. The website should automatically deploy in your browser. You can also play around with the website using our [GitHub Pages](https://soniyagaikwad.github.io/movie-trends-data-vis/).
+You can play around with _Montage: Exploring Movie Trends Over Time_ using [GitHub Pages](https://soniyagaikwad.github.io/movie-trends-data-vis/)!
+
+## Local Deployment
+
+To deploy _Montage: Exploring Movie Trends Over Time_, right-click the `index.html` file in the `docs` folder, and click on `Open with Live Server`. The website should automatically deploy in your browser.
 
 ## Project Screencast
 
@@ -14,7 +18,7 @@ To find a demo of _Montage: Exploring Movie Trends Over Time_, you can watch the
 
 ## Datasets
 
-In the `data` folder, we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
+In the `data` folder, under the `docs` folder, we have a `movies.csv` file, which is a dataset from [Kaggle by Yashwanth Sharaff called “Movies Performance and Feature Statistics: Analyzing Box Office Performance, Rating and Audience Reactions”](https://www.kaggle.com/datasets/thedevastator/movies-performance-and-feature-statistics).
 
 ## Code Description
 
