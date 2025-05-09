@@ -6,7 +6,7 @@ _Montage: Exploring Movie Trends Over Time_ is a web-based interactive visualiza
 
 ## Deployment
 
-To deploy _Montage: Exploring Movie Trends Over Time_, right-click the `montage.html` file in the `ui` folder, and click on `Open with Live Server`. The website should automatically deploy in your browser.
+To deploy _Montage: Exploring Movie Trends Over Time_, right-click the `index.html` file in the `docs` folder, and click on `Open with Live Server`. The website should automatically deploy in your browser.
 
 ## Project Screencast
 
